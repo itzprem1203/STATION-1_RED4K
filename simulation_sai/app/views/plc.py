@@ -270,6 +270,7 @@ def send_counts_to_plc(request):
         accept = int(data.get("accept", 0))
         reject = int(data.get("reject", 0))
         rework = int(data.get("rework", 0))
+        total = int(data.get("total", 0))
 
         # 📌 Debug: Show what will be written
         print(f"🔢 Writing to PLC → Accept: {accept}, Reject: {reject}, Rework: {rework}")
@@ -296,6 +297,12 @@ def send_counts_to_plc(request):
             print(f"✅ Successfully wrote {rework} to register 1104")
         else:
             print(f"❌ Failed to write {rework} to register 1104")
+
+        res4 = client.write_register(1106, total, slave=SLAVE_ID)
+        if res4 and not res4.isError():
+            print(f"✅ Successfully wrote {total} to register 1100")
+        else:
+            print(f"❌ Failed to write {total} to register 1100")    
 
         return JsonResponse({"status": "success"})
 

@@ -246,6 +246,53 @@ body {
     width: 26%;
 }
 
+
+@keyframes walkInBox {
+    0% { left: -200px; }
+    100% { left: 20px; }
+}
+@keyframes fadeInBox {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+    50% { box-shadow: 0 0 40px rgba(255,0,0,1); }
+    100% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+}
+
+#plc-notification {
+    position: fixed;
+    width: 95vw;
+    height: 80vh;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: red;
+    color: white;
+    font-size: 5vw; /* reduced font size */
+    font-weight: bold;
+    padding: 30px 50px;
+    border-radius: 15px;
+    z-index: 9999;
+    opacity: 0;
+    overflow: hidden; /* keep human inside box */
+    display: none; /* Hides completely by default */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#human-inside {
+    position: absolute;
+    bottom: 5px;
+    left: -200px; /* start hidden to left */
+    width: 250px; /* increased size */
+}
+
+
 </style>
 <div class="box_main">
 
@@ -1271,11 +1318,93 @@ document.getElementById('parameter_name').addEventListener('change', function() 
 
 </div>
 
-   
+       <div id="plc-notification">
+    <!-- <img id="human-inside" src="/static/images/air.png" alt="Human Writer"> -->
+    <div id="plc-message"></div>
+</div>
+
 
 
 <script>
-    
+
+
+
+let isVisible = false;
+let typingTimer = null;
+
+function typeMessage(message, element, speed = 100) {
+    element.innerText = "";
+    let index = 0;
+    typingTimer = setInterval(() => {
+        element.innerText += message[index];
+        index++;
+        if (index >= message.length) {
+            clearInterval(typingTimer);
+        }
+    }, speed);
+}
+
+function showNotificationWithHuman() {
+    if (isVisible) return;
+    isVisible = true;
+
+    const box = document.getElementById("plc-notification");
+    const human = document.getElementById("human-inside");
+    const msg = document.getElementById("plc-message");
+
+    // Make visible
+    box.style.display = "flex";
+    box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
+    box.style.opacity = "1";
+
+    setTimeout(() => {
+        human.style.animation = "walkInBox 2s forwards";
+    }, 300);
+
+    setTimeout(() => {
+        typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
+    }, 2300);
+}
+
+function hideNotificationAndHuman() {
+    clearInterval(typingTimer);
+
+    const box = document.getElementById("plc-notification");
+    const human = document.getElementById("human-inside");
+
+    box.style.display = "none"; // Completely remove from layout
+    box.style.opacity = "0";
+    box.style.animation = "";
+
+    human.style.left = "-200px";
+    human.style.animation = "";
+
+    isVisible = false;
+}
+
+
+function fetchActiveCoils() {
+    fetch("/get_plc_status/")
+        .then(response => response.json())
+        .then(data => {
+            const activeCoils = data.active_coils || [];
+            console.log("✅ Step 1 coils:", activeCoils);
+
+            if (activeCoils.includes(113)) {
+                showNotificationWithHuman();
+               
+            } else {
+                hideNotificationAndHuman();
+            }
+
+            
+        })
+        .catch(error => console.error("❌ PLC fetch error", error));
+}
+
+// Start checking every 500 ms
+setInterval(fetchActiveCoils, 500);
+
      window.addEventListener('DOMContentLoaded', (event) => {
             var inputs = document.querySelectorAll('input');
             inputs.forEach(input => {

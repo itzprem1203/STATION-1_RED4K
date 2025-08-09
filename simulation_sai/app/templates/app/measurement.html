@@ -623,26 +623,28 @@ input[type=checkbox] {
 
 #plc-notification {
     position: fixed;
-    width: 70vw;
-    height: 50vh;
+    width: 95vw;
+    height: 80vh;
     text-align: center;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: red;
     color: white;
-    font-size: 3vw; /* reduced font size */
+    font-size: 5vw; /* reduced font size */
     font-weight: bold;
     padding: 30px 50px;
     border-radius: 15px;
     z-index: 9999;
     opacity: 0;
     overflow: hidden; /* keep human inside box */
+    display: none; /* Hides completely by default */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
 
 #human-inside {
     position: absolute;
@@ -989,7 +991,7 @@ input[type=checkbox] {
 
 
     <div id="plc-notification">
-    <!-- <img id="human-inside" src="/static/images/air.png" alt="Human Writer"> -->
+    <img id="human-inside" src="/static/images/air.png" alt="Human Writer">
     <div id="plc-message"></div>
 </div>
 
@@ -1539,9 +1541,11 @@ $(document).ready(function() {
                     console.log("LTL Value:", response.ltlValues[i]);
                     console.log("UTL Value:", response.utlValues[i]);
                     console.log("Measurement Mode Value:", response.measurementModeValues[i]);
+                    console.log("DIGITS VALUES Value:", response.digitsValues[i]);
                     console.log("O1 Value:", response.o1_values[i]);
                     console.log("D Value:", response.d_values[i]);
                     console.log("E Value:", response.e_values[i]);
+
                     console.log("E Value:", response.b_values[i]);
                     console.log("E Value:", response.b1_values[i]);
                     console.log("Probe Value:", response.probe_values[i]);
@@ -1559,6 +1563,7 @@ $(document).ready(function() {
                         response.o1_values[i], 
                         readingsInput, 
                         response.measurementModeValues[i],
+                        response.digitsValues[i],
                         response.step_no_values[i],
                         response.lslValues[i], 
                         response.uslValues[i],
@@ -2183,16 +2188,15 @@ function showNotificationWithHuman() {
     const human = document.getElementById("human-inside");
     const msg = document.getElementById("plc-message");
 
-    // Step 1: Show box
+    // Make visible
+    box.style.display = "flex";
     box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
     box.style.opacity = "1";
 
-    // Step 2: Animate human walking inside box
     setTimeout(() => {
         human.style.animation = "walkInBox 2s forwards";
     }, 300);
 
-    // Step 3: Start typing after human walks in
     setTimeout(() => {
         typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
     }, 2300);
@@ -2200,14 +2204,20 @@ function showNotificationWithHuman() {
 
 function hideNotificationAndHuman() {
     clearInterval(typingTimer);
+
     const box = document.getElementById("plc-notification");
     const human = document.getElementById("human-inside");
+
+    box.style.display = "none"; // Completely remove from layout
     box.style.opacity = "0";
     box.style.animation = "";
-    human.style.left = "-200px"; // reset
+
+    human.style.left = "-200px";
     human.style.animation = "";
+
     isVisible = false;
 }
+
 
 function fetchActiveCoils() {
     fetch("/get_plc_status/")
@@ -2566,10 +2576,10 @@ function getCombinedTextareaParts(probeNumber) {
 
 
 
-function displaySerialData(parameterNameValues, probe_value, e_value, d_value, o1_value, readingsInput, measurementMode, step_no, lsl, 
+function displaySerialData(parameterNameValues, probe_value, e_value, d_value, o1_value, readingsInput, measurementMode,digitsValues, step_no, lsl, 
 usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, parameter_name_single, b_value, b1_value) {
 
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",step_no);
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",digitsValues);
 
 if (!coilCheckIntervalStarted) {
     startCoilCheckForStep(step_no);
@@ -2658,7 +2668,7 @@ if (!coilCheckIntervalStarted) {
                     if (isNaN(currentValue) || (measurementMode === "MAX" && displayOutput > currentValue) ||
                         (measurementMode === "MIN" && displayOutput < currentValue) ||
                         (measurementMode === "CUR" || measurementMode === "TIR" || measurementMode === "AVR"|| measurementMode === "DTM")) {
-                        readingsInput.value = displayOutput.toFixed(4);
+                        readingsInput.value = displayOutput.toFixed(digitsValues);
                          if (measurementMode === "AVR") {
                             if (!avrValuesMap[inputId]) {
                                 avrValuesMap[inputId] = { max: displayOutput, min: displayOutput };
@@ -2676,7 +2686,7 @@ if (!coilCheckIntervalStarted) {
                             if (max !== min) {
                                 const avr = (max + min) / 2;
                                 if (!isNaN(avr)) {
-                                    readingsInput.value = avr.toFixed(4);
+                                    readingsInput.value = avr.toFixed(digitsValues);
                                     displayOutput = avr;
                                 }
                             }
@@ -2700,14 +2710,14 @@ if (!coilCheckIntervalStarted) {
                             if (max !== min) {
                                 const dtm = (max + min) / 2;
                                 if (!isNaN(dtm)) {
-                                    readingsInput.value = dtm.toFixed(4);
+                                    readingsInput.value = dtm.toFixed(digitsValues);
                                     displayOutput = dtm;
                                 }
                             }
                         }
 
                         if (measurementMode === "TIR") {
-                            readingsInput.value = tirValue.toFixed(4);
+                            readingsInput.value = tirValue.toFixed(digitsValues);
                         }
 
                         // Calculate total length and colored portion length
@@ -2914,10 +2924,23 @@ function getCookie(name) {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('punch_textarea').focus();
-    
+document.addEventListener('DOMContentLoaded', function () {
+    const punchTextarea = document.getElementById('punch_textarea');
+
+    // Focus when page loads
+    punchTextarea.focus();
+
+    // Always re-focus when clicked
+    punchTextarea.addEventListener('click', function () {
+        punchTextarea.focus();
+    });
+
+    // (Optional) Focus when it loses focus
+    punchTextarea.addEventListener('blur', function () {
+        punchTextarea.focus();
+    });
 });
+
 
 function handleEnterKeyPress(event) {
     var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
