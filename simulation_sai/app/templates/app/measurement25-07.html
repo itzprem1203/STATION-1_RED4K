@@ -30,8 +30,6 @@ body {
 }
 
 .container-2{
-    margin: 0;
-    padding: 0;
     height: 35vh;
     width: 98vw;
     margin-bottom: 0;
@@ -41,37 +39,34 @@ body {
     display: flex;
     height: 65vh;
     margin-top: 0;
-    margin-top: -1%;
+    margin-top: -13%;
 }
 
 
 .box-1{
-        height: 33vh;
+        height: 12vh;
         width: 98vw;
-        padding: 10px;
         background-color:rgb(245, 196, 106);
         border: 2px solid black;    
     }
 
     .container-1{
-        height: 30vh;
-        width: 96vw;
+        height: 14vh;
+        /* width: 96vw; */
+
     }
 
     .box-2{
-        height: 60vh;
+        height: 85vh;
         width: 70vw;
-        background-color:lightgrey;
         border: 1px solid black; 
-        margin-top: 0;   
     }
 
     .table-container{
-        height: 60vh;
+        height: 85vh;
         width: 70vw;
-        background-color: violet;
+        background-color: white;
         display: flex;
-       
         margin-left: 1%;
     }
 
@@ -84,7 +79,7 @@ body {
     #my-table td{
     border: 1px solid black;
     /* padding: 8px; */
-    height: 5vh;
+    height: 1vh;
     text-align: center;
     font-weight: bold;
     font-size: 1vw;
@@ -330,9 +325,9 @@ input[type=checkbox] {
 
 
 #save-btn{
-    margin-top: 10px;
+    margin-top: 7px;
     width: 8vw;
-            height: 10vh;
+            height: 8vh;
             margin-left: 1%;
             font-size: 1.5vw;
             font-weight: bold;
@@ -340,7 +335,7 @@ input[type=checkbox] {
             
         }
         #master-btn{
-            margin-top: 5%;
+            margin-top: 2%;
             width: 8vw;
             height: 10vh;
             margin-left: 1%;
@@ -350,11 +345,13 @@ input[type=checkbox] {
             
         }
 
+       
+
         #start-btn{
             width: 8vw;
             height: 10vh;
             margin-left: 1%;
-            margin-top: 10px;
+            margin-top: 5px;
             font-size: 1.5vw;
             font-weight: bold;
             background-color: lightgreen;
@@ -364,7 +361,7 @@ input[type=checkbox] {
             width: 8vw;
             height: 10vh;
             margin-left: 1%;
-            margin-top: 10px;
+            margin-top: 5px;
             font-size: 1.5vw;
             font-weight: bold;
             background-color: coral;
@@ -375,7 +372,7 @@ input[type=checkbox] {
             margin-left: 1%;
             font-size: 1.5vw;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 5px;
             background-color: rgb(233, 177, 73);
         }
 
@@ -387,7 +384,7 @@ input[type=checkbox] {
         }
 
         .container-3{
-    height: 53vh;
+    height: 50vh;
     width: 15vw;
    
     margin-left: 1%;
@@ -395,7 +392,7 @@ input[type=checkbox] {
 }
 
 #box3{
-    height: 60vh;
+    height: 55vh;
     width: 15vw;
     background-color:lightgray;
     margin-left:0;
@@ -448,12 +445,12 @@ input[type=checkbox] {
 }
 
 .container-1 label{
-    font-size: 1.2vw;
+    font-size: 1vw;
     font-weight: bold;
 }   
 
 .container-1 input{
-    font-size: 1.2vw;
+    font-size: 1vw;
     font-weight: bold;
     text-align: center;
 }   
@@ -462,9 +459,210 @@ input[type=checkbox] {
 }
 
 
+.master-alert-wrapper {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.master-alert-box {
+  background: white;
+  border: 4px solid red;
+  padding: 30px 40px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 800px;
+}
+
+.master-alert-box p {
+  color: red;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.master-alert-box button {
+  background: red;
+  color: white;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+
+
+ #communication{
+    margin-top: 3%;
+    width: 8vw;
+    height: 12vh;
+    margin-left: 1%;
+    font-size: 1vw;
+    font-weight: bold;
+    background-color: rgb(247, 132, 247);
+    
+}
+
+#handshaking{
+    margin-top: 8%;
+    width: 30vw;
+    height: 16vh;
+
+    font-size: 1vw;
+    font-weight: bold;
+    background-color: rgb(247, 132, 247);
+    
+}
+
+
+.plc-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.plc-label {
+    font-weight: bold;
+    font-size: 0.9vw;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    width: 80px; /* fixed width for alignment */
+    
+}
+
+.plc-light {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: red;
+    padding: 3px;
+
+
+}
+
+
+
+
+.comm-status-container {
+    height: 29vh;
+    width: 25vw;
+    display: flex;
+    background: black;
+    border: 1px solid #ccc;
+    margin-top: -4%;
+    margin-left: 73%;
+    box-sizing: border-box;
+}
+
+.status-section {
+    flex: 1;
+    padding: 2px;
+    border-right: 1px solid #ccc;
+}
+.status-section:last-child {
+    border-right: none;
+}
+
+.status-section h4 {
+    text-align: center;
+    margin: 0 0 5px;
+    font-size: 0.9vw;
+    background: #ddd;
+    padding: 1px;
+}
+
+.plc-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1px;
+}
+.plc-label {
+    flex: 1;
+    font-size: 0.8vw;
+    width: 20px;
+}
+.plc-light {
+    width: 14px;
+    height: 14px;
+    background: red;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+.plc-light.green {
+    background: green;
+}
+
+.plc-light.on{
+    background: green;
+}
+
+
+@keyframes walkInBox {
+    0% { left: -200px; }
+    100% { left: 20px; }
+}
+@keyframes fadeInBox {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+    50% { box-shadow: 0 0 40px rgba(255,0,0,1); }
+    100% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+}
+
+#plc-notification {
+    position: fixed;
+    width: 95vw;
+    height: 80vh;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: red;
+    color: white;
+    font-size: 5vw; /* reduced font size */
+    font-weight: bold;
+    padding: 30px 50px;
+    border-radius: 15px;
+    z-index: 9999;
+    opacity: 0;
+    overflow: hidden; /* keep human inside box */
+    display: none; /* Hides completely by default */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#human-inside {
+    position: absolute;
+    bottom: 5px;
+    left: -200px; /* start hidden to left */
+    width: 250px; /* increased size */
+}
 
 </style>
 
+
+
+<div id="master-alert-wrapper" class="master-alert-wrapper hidden">
+  <div class="master-alert-box">
+    <p id="master-alert-message"></p>
+    <button onclick="closeMasterAlert()">OK</button>
+  </div>
+</div>
 
 
 <div class="container-main">
@@ -472,26 +670,41 @@ input[type=checkbox] {
         
         <div class="box-1" id="box1">
             <div class="container-1">
-                <label for="date" style="width: 5vw; margin-left:10px;">DATE:</label>
-                <input type="text" id="date" style="width: 16vw;background-color:#1a7d9e ;color: white;" readonly>
+                <label for="date" style="width: 3vw; ">DATE:</label>
+                <input type="text" id="date" style="width: 12vw;background-color:#1a7d9e ;color: white;" readonly>
             
-                <label for="operator" style="margin-left: -10px;">OPERATOR:</label>
-                <input type="text" id="operator" readonly style="margin-left: -10px;" >
+                <label for="operator"  style="width: 5.5vw; ">OPERATOR:</label>
+                <input type="text" id="operator" readonly >
             
-                <label for="shift" style="width: 5vw; ">SHIFT:</label>
-                <input type="text" id="shift" class="shift-name" style="width: 8%;" readonly >
+                <label for="shift" style="width: 3vw; ">SHIFT:</label>
+                <input type="text" id="shift" class="shift-name" style="width: 5%;" readonly >
+                
+                <label for="machine" style="width: 5vw; " >MACHINE:</label>
+                <input type="text" id="machine" style="width: 7%;" readonly>
+            
+                <label for="partModel" style="width: 7vw;" >PART MODEL:</label>
+                <select id="partModel" name="partModel" style="width: 5vw" >
+                    {% for value in part_model_values %}
+                        <option value="{{ value }}"><b>{{ value }}</b></option>
+                    {% endfor %}
+                </select>
+
                 
                 
-                <label for="accept" style="width: 5vw; ">ACCEPT:</label>
-                <input type="text" id="accept" value="0" style="background-color: green;width: 5%;" readonly>
-            
-                <label for="reject" style="width: 5vw;">REJECT:</label>
-                <input type="text" id="reject" value="0" style="background-color: red;width: 5%;" readonly>
-            
-                <label for="rework" style="width: 5vw;">REWORK:</label>
-                <input type="text" id="rework" value="0" style="background-color: yellow;width: 5%; margin-left: 5px;" readonly>
+
                 
-                <button class="reset-button" id="reset-button">
+                
+                
+                <label for="accept" style="width: 4vw; ">ACCEPT:</label>
+                <input type="text" id="accept" value="0" style="background-color: green;width: 3%;" readonly>
+            
+                <label for="reject" style="width: 4vw;">REJECT:</label>
+                <input type="text" id="reject" value="0" style="background-color: red;width: 3%;" readonly>
+            
+                <label for="rework" style="width: 4vw;">REWORK:</label>
+                <input type="text" id="rework" value="0" style="background-color: yellow;width: 3%;" readonly>
+
+                    <button class="reset-button" id="reset-button">
                     <span class="reset-symbol">&#8634;</span>
                 </button>
                 
@@ -501,40 +714,21 @@ input[type=checkbox] {
                     </div> 
                 </button><br>
             
-            
+                <label for="CUSTOMER" style="width: 5.5vw; ">CUSTOMER:</label>
+                <input type="text" id="customer_name" style="width: 10vw; text-align: center;font-weight: bold;" readonly>
+
+
                 
-                <label for="machine" style="margin-left: 8%;">MACHINE:</label>
-                <input type="text" id="machine" style="width: 8%;" readonly>
+                <label for="cycle_mode" style="width: 7vw; ">CYCLE MODE:</label>
+                <input type="text" id="cycle_mode" readonly >
+
+                <input type="text" id="pre" style="width: 40vw;height: 4vh;  font-size: 2vh; " readonly>
+
+
+                <label for="part_status" style=" width: 7vw;" >PART STATUS</label>
+                <input type="text" id="part_status" style="width: 15vw;" readonly>
+
             
-                <label for="partModel" style="width: 10vw;" >PART MODEL:</label>
-                <select id="partModel" name="partModel" style="width: 15vw" >
-                    {% for value in part_model_values %}
-                        <option value="{{ value }}"><b>{{ value }}</b></option>
-                    {% endfor %}
-                </select>
-            
-                <label for="comp_srno" style="width: 10vw; ">COMP NO:</label>
-                <input type="text" id="comp_srno" style="width: 25vw; font-weight: bold;" readonly><br>
-            
-                <label for="part_status" style=" width: 10vw;margin-left: 11%;" >PART STATUS</label>
-                <input type="text" id="part_status" style="width: 15vw;height: 5vh;" readonly>
-                
-                <input type="text" id="customer_name" style="width: 20vw;height: 5vh; margin-left: 2%;text-align: center;font-weight: bold;" readonly>
-                
-                <label for="cycle_mode" style="margin-left: 1%;">CYCLE MODE:</label>
-                <input type="text" id="cycle_mode" readonly ><br>
-            
-                <input type="text" id="pre" style="width: 60vw;height: 6vh;margin-left: 20%; margin-top: 1%; " readonly>
-            
-                {% load static %}
-                <div class="center-image">
-                        <img src="{% static 'images/Gauge.jpg' %}" style="height: 16vh;width: 10vw; margin-left: 89%; margin-top: -7%; border: 4px solid white;">
-                    </div>
-                
-                    {% load static %}
-                    <div class="center-image-1">
-                            <img src="{% static 'images/Gauge.jpg' %}" style="height: 16vh;width: 10vw; margin-left: 1%; margin-top: -10%; border: 4px solid white;">
-                        </div>    
             
             </div>
         
@@ -552,10 +746,10 @@ input[type=checkbox] {
               <thead>
                 <tr>
                   <th style="width: 5%;height: 30px; ">Sr.No</th>
-                  <th style="width: 15%;" id="parameter_name">Parameter Name</th>
-                  <th style="width: 10%;" id="nominal">Nominal</th>
-                  <th style="width: 10%;" id="readings">Readings</th>
-                  <th style="width: 10%;" id="lsl">LSL</th>
+                  <th style="width: 18%;" id="parameter_name">Parameter Name</th>
+                  <th style="width: 9%;" id="nominal">Nominal</th>
+                  <th style="width: 9%;" id="readings">Readings</th>
+                  <th style="width: 9%;" id="lsl">LSL</th>
                   <th style="width: 25%;" id="indicator">Indicator</th>
                   <th style="width: 10%;" id="usl">USL</th>
                   <th style="width: 15%;" id="status">Status</th>
@@ -567,8 +761,11 @@ input[type=checkbox] {
                   
               </tbody>
             </table>
-          
-      </div>
+            <label for="comp_srno" style="width: 5.5vw; font-size: 1.5vh;">COMP NO:</label>
+            <input type="text" id="comp_srno" style="width: 50vw;height: 4vh; font-weight: bold; background-color: yellow;" readonly>
+            
+        </div>
+        
     </div>
 
     <div class="container-3" >
@@ -590,14 +787,67 @@ input[type=checkbox] {
 
     </div>
 
+    
 <div class="btn-container">
+<div id="communication" class="btn_outline">
+<!-- 🔆 PLC Status Lights -->
+<div class="plc-item">
+        <span class="plc-label">PLC</span>
+        <div id="coil73-light" class="plc-light"></div>
+    </div>
+    <div class="plc-item">
+        <span class="plc-label">COM 1</span>
+        <div id="com1-light" class="plc-light"></div>
+    </div>
+    <div class="plc-item">
+        <span class="plc-label">COM 2</span>
+        <div id="com2-light" class="plc-light"></div>
+    </div>
+    <div class="plc-item">
+        <span class="plc-label">COM 3</span>
+        <div id="com3-light" class="plc-light"></div>
+    </div>
+</div>
 <div><button type="button" class="btn_outline" id="master-btn">Master<br>[F1]</button></div>
 <div><button type="button" class="btn_outline" id="start-btn"> Start<br>[F4]</button></div>
 <div><button type="button" class="btn_outline" id="stop-btn">Stop<br>[F5]</button></div>
 <div><button type="button" class="btn_outline" id="save-btn" disabled style="filter: blur(2px);"> Save</button></div>
-<div><button type="button" class="btn_outline" id="back-btn">Back<br>[F7]</button></div>
+<div><button type="button" class="btn_outline" id="back-btn" hidden>Back<br>[F7]</button></div>
+
+</div><br>
+
+
+
 </div>
+<div class="comm-status-container">
+    <!-- PLC to PC Section -->
+    <div class="status-section">
+        <h4>PLC → PC</h4>
+        <div class="plc-item"><span class="plc-label">Step1 Start</span><div id="step1-start-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step1 Stop</span><div id="step1-stop-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step2 Start</span><div id="step2-start-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step2 Stop</span><div id="step2-stop-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step3 Start</span><div id="step3-start-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step3 Stop</span><div id="step3-stop-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">PLC Ready</span><div id="plc-ready-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Air Low</span><div id="air-low-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Rejection Bin</span><div id="rejection-bin-light" class="plc-light"></div></div>
+    </div>
+
+    <!-- PC to PLC Section -->
+    <div class="status-section">
+        <h4>PC → PLC</h4>
+        <div class="plc-item"><span class="plc-label">PC Ready</span><div id="pc-ready-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Accept</span><div id="accept-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Reject</span><div id="reject-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Rework</span><div id="rework-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step1 Done</span><div id="step1-done-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step2 Done</span><div id="step2-done-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Step3 Done</span><div id="step3-done-light" class="plc-light"></div></div>
+        <div class="plc-item"><span class="plc-label">Counter</span><div id="counter-light" class="plc-light"></div></div>
+    </div>
 </div>
+
 </div>
 <div class="notification-container" id="notification-container">
     <pre style="margin-top: 10px; font-size: large; font-weight: bold;">Enter Your Punch Number here:</pre>
@@ -719,7 +969,46 @@ input[type=checkbox] {
 <input type="text" id="databit" value="{{ comport_databit }}" style="display: none;">
 
 
+
+<div id="notification_plc" style="
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: red;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+">
+    ❌ Coil 64 not active — waiting to start process...
+</div>
+
+
+    <div id="plc-notification">
+    <img id="human-inside" src="/static/images/air.png" alt="Human Writer">
+    <div id="plc-message"></div>
+</div>
+
 <script>
+
+
+function showNotification_plc(message) {
+    const note = document.getElementById("notification_plc");
+    note.textContent = message;
+    note.style.display = "block";
+}
+
+function hideNotification_plc() {
+    const note = document.getElementById("notification_plc");
+    note.style.display = "none";
+}
+
   
 
 
@@ -1078,6 +1367,8 @@ if (parameterAttributes.length > 0 && attributeStatuses.length > 0) {
                 showCustomAlert('ERROR SAVEING DATA' , 'error'); 
             }
         });
+
+        
     });
 });
 
@@ -1250,9 +1541,11 @@ $(document).ready(function() {
                     console.log("LTL Value:", response.ltlValues[i]);
                     console.log("UTL Value:", response.utlValues[i]);
                     console.log("Measurement Mode Value:", response.measurementModeValues[i]);
+                    console.log("DIGITS VALUES Value:", response.digitsValues[i]);
                     console.log("O1 Value:", response.o1_values[i]);
                     console.log("D Value:", response.d_values[i]);
                     console.log("E Value:", response.e_values[i]);
+
                     console.log("E Value:", response.b_values[i]);
                     console.log("E Value:", response.b1_values[i]);
                     console.log("Probe Value:", response.probe_values[i]);
@@ -1270,6 +1563,7 @@ $(document).ready(function() {
                         response.o1_values[i], 
                         readingsInput, 
                         response.measurementModeValues[i],
+                        response.digitsValues[i],
                         response.step_no_values[i],
                         response.lslValues[i], 
                         response.uslValues[i],
@@ -1535,182 +1829,85 @@ document.getElementById("stop-btn").addEventListener("click", function() {
             console.log("hasRed:", hasRed, "hasYellow:", hasYellow, "hasGreen:", hasGreen);
 
 
-            
-
-
-
-                        
             // Determine final part status based on the flags
+            // Reset all Y-coils before setting the right one
+            
             if (hasRed) {
-                partStatusInput.style.backgroundColor = 'red';
-                partStatusInput.value = "REJECT";
+            partStatusInput.style.backgroundColor = 'red';
+            partStatusInput.value = "REJECT";
+            sendPartStatus("REJECT");
 
-                // let socket = new WebSocket('ws://localhost:8000/ws/measurement/');
+        } else if (hasYellow) {
+            partStatusInput.style.backgroundColor = 'yellow';
+            partStatusInput.value = "REWORK";
+            sendPartStatus("REWORK");
 
-                // socket.onopen = function() {
-                //     console.log("✅ WebSocket Connected!");
+        } else if (hasGreen) {
+            partStatusInput.style.backgroundColor = '#00ff00';
+            partStatusInput.value = "ACCEPT";
+            sendPartStatus("ACCEPT");
+        }
 
-                //     setTimeout(() =>{
-                //     // Send request to write to PLC dynamically
-                //     socket.send(JSON.stringify({ "action": "write", "address": 40003, "value": 1 }));
-                // },1000);
-                    
-                //     setTimeout(() => {
-                //         socket.send(JSON.stringify({ "action": "read", "address": 40022 }));
-                //     }, 1000);
-                // };
+function sendPartStatus(status) {
+    // Send initial status
+    fetch('/post_part_status/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: status })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('✅ Status posted:', data);
 
-                // socket.onmessage = function(event) {
-                //     let response = JSON.parse(event.data);
+        if (status.toLowerCase() === "accept") {
+            // Directly enable for Accept
+            enableSaveSection();
+        } else if (status.toLowerCase() === "reject" || status.toLowerCase() === "rework") {
+            // Poll until coil 116 is active
+            waitForCoil116AndEnable();
+        }
+    })
+    .catch(err => console.error('❌ Failed to post status:', err));
+}
 
-                //     if (response.status === "success") {
-                //         console.log("✅ PLC Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::", response);
+function waitForCoil116AndEnable() {
+    const interval = 1000; // milliseconds
 
-                //         let confirmYesBtn = document.getElementById("confirm-yes");
-                //         let confirmNoBtn = document.getElementById("confirm-no");
-                //         console.log('your data is this for this :::::::::::::::::::::',confirmYesBtn);
-                //         console.log('your data is this for this :::::::::::::::::::::',confirmNoBtn);
+    const poll = () => {
+        fetch("/get_plc_status/")
+            .then(res => res.json())
+            .then(data => {
+                const activeCoils = data.active_coils || [];
 
-                //         if (response === 1) {
-                //             confirmYesBtn.disabled = false;
-                //             confirmNoBtn.disabled = false;
-                //         } else {
-                //             confirmYesBtn.disabled = true;
-                //             confirmNoBtn.disabled = true;
-                //         }
-                //     } else {
-                //         console.error("⚠️ Error:", response.message);
-                //     }
+                console.log("🔄 Checking coils:", activeCoils);
 
-                //     // Handle Read Response for address 40023
-                //     if (response.address === 40023) {
-                //         console.log("📡 Value from for thissssssssssssssssssssssssssssssssssss is valuesssssssssssssss 40023:", response.value);
-                        
-                //     }
-                // };
+                if (activeCoils.includes(116)) {
+                    console.log("✅ Coil 116 detected.");
+                    enableSaveSection();
+                } else {
+                    setTimeout(poll, interval); // Wait and try again
+                }
+            })
+            .catch(err => {
+                console.error("❌ Error polling coils:", err);
+                setTimeout(poll, interval); // Retry anyway
+            });
+    };
 
-                // socket.onerror = function(error) {
-                //     console.error("❌ WebSocket Error:", error);
-                // };
+    poll(); // Start polling
+}
 
-                // socket.onclose = function() {
-                //     console.log("🔴 WebSocket Closed");
-                // };
+function enableSaveSection() {
+    const saveButton = document.getElementById("save-btn");
+    saveButton.disabled = false;
+    saveButton.style.filter = "none";
 
-
-                
-            } else if (hasYellow) {
-                partStatusInput.style.backgroundColor = 'yellow';
-                partStatusInput.value = "REWORK";
-
-            //     let socket = new WebSocket('ws://localhost:8000/ws/measurement/');
-
-            // socket.onopen = function() {
-            //     console.log("✅ WebSocket Connected!");
-
-            //     // Send request to write to PLC dynamically
-            //     setTimeout(() =>{
-            //         socket.send(JSON.stringify({ "action": "write", "address": 40004, "value": 1 }));
-            //     },1000);    
-            //     // Send request to read from PLC at address 40021
-
-            //     setTimeout(() =>{
-            //         socket.send(JSON.stringify({ "action": "read", "address": 40023 }));
-            //     },1000);    
-            // };
-
-            // socket.onmessage = function(event) {
-            //     let response = JSON.parse(event.data);
-
-            //     if (response.status === "success") {
-            //         console.log("✅ PLC Response:", response);
-            //         let confirmYesBtn = document.getElementById("confirm-yes");
-            //             let confirmNoBtn = document.getElementById("confirm-no");
-            //             console.log('your data is this for this :::::::::::::::::::::',confirmYesBtn);
-            //             console.log('your data is this for this :::::::::::::::::::::',confirmNoBtn);
-
-            //             if (response === 1) {
-            //                 confirmYesBtn.disabled = false;
-            //                 confirmNoBtn.disabled = false;
-            //             } else {
-            //                 confirmYesBtn.disabled = true;
-            //                 confirmNoBtn.disabled = true;
-            //             }
-            //         } else {
-            //             console.error("⚠️ Error:", response.message);
-            //         }
-
-            //     // Handle Read Response
-            //     if (response.address === 40023) {
-            //         console.log("📡 Value from 40023:", response.value);
-            //     }
-            // };
-
-            // socket.onerror = function(error) {
-            //     console.error("❌ WebSocket Error:", error);
-            // };
-
-            // socket.onclose = function() {
-            //     console.log("🔴 WebSocket Closed");
-            // };
-            } else if (hasGreen) {
-                partStatusInput.style.backgroundColor = '#00ff00';
-                partStatusInput.value = "ACCEPT";
+    showCustomConfirmationModal();
+    enableButtons();
+}
 
 
-            //     let socket = new WebSocket('ws://localhost:8000/ws/measurement/');
 
-            // socket.onopen = function() {
-            //     console.log("✅ WebSocket Connected!");
-
-            //     // Send request to write to PLC dynamically
-            //     setTimeout(() =>{
-            //         socket.send(JSON.stringify({ "action": "write", "address": 40002, "value": 1 }));
-            //     }, 1000);    
-            //     // Send request to read from PLC at address 40021
-
-            //     setTimeout(() =>{
-            //         socket.send(JSON.stringify({ "action": "read", "address": 40023 }));
-            //     }, 1000);     
-                
-            // };
-
-            // socket.onmessage = function(event) {
-            //     let response = JSON.parse(event.data);
-
-            //     if (response.status === "success") {
-            //         showCustomConfirmationModal();
-            //         console.log("✅ PLC Response:", response);
-            //         let confirmYesBtn = document.getElementById("confirm-yes");
-            //             let confirmNoBtn = document.getElementById("confirm-no");
-            //             console.log('your data is this for this :::::::::::::::::::::',confirmYesBtn);
-            //             console.log('your data is this for this :::::::::::::::::::::',confirmNoBtn);
-
-            //             if (response === 1) {
-            //                 confirmYesBtn.disabled = true;
-            //                 confirmNoBtn.disabled = true;
-            //             } else {
-            //                 confirmYesBtn.disabled = false;
-            //                 confirmNoBtn.disabled = false;
-            //             }
-            //         } else {
-            //             console.error("⚠️ Error:", response.message);
-            //         }
-
-            //     // Handle Read Response
-            //     if (response.address === 40023) {
-            //         console.log("📡 Value from 40023:", response.value);
-            //     }
-            // };
-
-            // socket.onerror = function(error) {
-            //     console.error("❌ WebSocket Error:", error);
-            // };
-
-            // socket.onclose = function() {
-            //     console.log("🔴 WebSocket Closed");
-            // };
-            }
 
     partStatusInput.style.fontWeight = "bold";
             partStatusInput.style.textAlign = "center";
@@ -1718,67 +1915,15 @@ document.getElementById("stop-btn").addEventListener("click", function() {
             // Display notification to the client
             showNotification("You have completed the measurement for this job. Do Next Job");
 
-            
-
-            // let socket = new WebSocket('ws://localhost:8000/ws/measurement/');
-            // let saveButton = document.getElementById("save-btn");
-
-            // // Initially hide the save button
-            // saveButton.disabled = true;
-            // saveButton.style.filter = "blur(2px)";
-
-            // socket.onopen = function() {
-            //     console.log("✅ WebSocket Connected!");
-
-            //     // Read from PLC at address 40023
-            //     setTimeout(() => {
-            //         socket.send(JSON.stringify({ "action": "read", "address": 40023 }));
-            //     }, 1000);
-            // };
-
-            // socket.onmessage = function(event) {
-            //     let response = JSON.parse(event.data);
-
-            //     if (response.status === "success") {
-            //         console.log("✅ PLC Response:", response);
-            //     } else {
-            //         console.error("⚠️ Error:", response.message);
-            //     }
-
-            //     // Handle Read Response - Enable save button only if 40023 value is 1
-            //     if (response.address === 40023) {
-            //         console.log("📡 Value from 40023:", response.value);
-
-            //         if (response.value === 1) {
-            //             saveButton.disabled = false; // Enable button
-            //             saveButton.style.filter = "none"; // Remove blur effect
-            //             showCustomConfirmationModal();
-            //         } else {
-            //             saveButton.disabled = true;  // Keep it disabled
-            //             saveButton.style.filter = "blur(2px)"; // Apply blur effect
-            //         }
-            //     }
-            // };
-
-            // socket.onerror = function(error) {
-            //     console.error("❌ WebSocket Error:", error);
-            // };
-
-            // socket.onclose = function() {
-            //     console.log("🔴 WebSocket Closed");
-            // };
-
-
-
             // Display notification to the client
             showNotification("You have completed the measurement for this job. Do Next Job");
 
-            const saveButton = document.getElementById("save-btn");
-            saveButton.disabled = false;        // Enable the button
-            saveButton.style.filter = "none";   // Remove the blur effect
+            // const saveButton = document.getElementById("save-btn");
+            // saveButton.disabled = false;        // Enable the button
+            // saveButton.style.filter = "none";   // Remove the blur effect
 
-            showCustomConfirmationModal();
-            enableButtons();
+            // showCustomConfirmationModal();
+            // enableButtons();
         }
 
         // Stop calculation for the current step
@@ -1807,16 +1952,22 @@ function showCustomConfirmationModal() {
 
     // Handle Yes button click
     yesButton.onclick = function () {
+       
         document.getElementById("confirmation-modal").style.display = "none";
         document.getElementById("save-btn").click();
 
+        // Send initial status
+    
         
         
     };
 
+
+    
     // Handle No button click
     document.getElementById("confirm-no").onclick = function () {
         document.getElementById("confirmation-modal").style.display = "none";
+        location.reload();
     };
 
     // Handle Enter key press
@@ -1916,6 +2067,7 @@ document.addEventListener("keydown", function(event) {
 });
 
 function goBackStep() {
+    console.log('your cleared value is this eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:')
     if (currentStep > 1) {
         currentStep--; // Decrement current step
 
@@ -1939,6 +2091,29 @@ function goBackStep() {
                 statusCell.textContent = "";
                 statusCell.style.backgroundColor = "";
             }
+
+            var indicatorBox = document.getElementById('indicator-box-' + index);
+            if (indicatorBox) {
+                indicatorBox.textContent = "";
+                indicatorBox.style.backgroundColor = ""; // Clear background
+            }
+
+            var indicatorBox1 = document.getElementById('indicator-box1-' + index);
+            if (indicatorBox1) {
+                indicatorBox1.textContent = "";
+                indicatorBox1.style.backgroundColor = ""; // Clear background
+            }
+            var indicatorBox = document.getElementById('indicator-box-' + index);
+            if (indicatorBox) {
+                indicatorBox.textContent = "";
+                indicatorBox.style.background = ""; // ✅ fix here
+            }
+
+            var indicatorBox1 = document.getElementById('indicator-box1-' + index);
+            if (indicatorBox1) {
+                indicatorBox1.textContent = "";
+                indicatorBox1.style.background = ""; // ✅ fix here
+            }
         });
 
         if (currentStep === totalSteps) {
@@ -1953,7 +2128,8 @@ function goBackStep() {
         showNotification(`Going back to step ${currentStep}.`);
 
         // Start calculation for the current step
-        startContinuousUpdate();
+        // startContinuousUpdate();
+        stopContinuousUpdate();
     } else {
         showNotification("Already at the first step.");
     }
@@ -1983,8 +2159,369 @@ function moveToNextStep() {
     }   // Start calculation for the next step
     // startContinuousUpdate();
 
+    startCoilCheckForStep(currentStep);
+
 }
 
+
+        
+let isVisible = false;
+let typingTimer = null;
+
+function typeMessage(message, element, speed = 100) {
+    element.innerText = "";
+    let index = 0;
+    typingTimer = setInterval(() => {
+        element.innerText += message[index];
+        index++;
+        if (index >= message.length) {
+            clearInterval(typingTimer);
+        }
+    }, speed);
+}
+
+function showNotificationWithHuman() {
+    if (isVisible) return;
+    isVisible = true;
+
+    const box = document.getElementById("plc-notification");
+    const human = document.getElementById("human-inside");
+    const msg = document.getElementById("plc-message");
+
+    // Make visible
+    box.style.display = "flex";
+    box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
+    box.style.opacity = "1";
+
+    setTimeout(() => {
+        human.style.animation = "walkInBox 2s forwards";
+    }, 300);
+
+    setTimeout(() => {
+        typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
+    }, 2300);
+}
+
+function hideNotificationAndHuman() {
+    clearInterval(typingTimer);
+
+    const box = document.getElementById("plc-notification");
+    const human = document.getElementById("human-inside");
+
+    box.style.display = "none"; // Completely remove from layout
+    box.style.opacity = "0";
+    box.style.animation = "";
+
+    human.style.left = "-200px";
+    human.style.animation = "";
+
+    isVisible = false;
+}
+
+
+function fetchActiveCoils() {
+    fetch("/get_plc_status/")
+        .then(response => response.json())
+        .then(data => {
+            const activeCoils = data.active_coils || [];
+            console.log("✅ Step 1 coils:", activeCoils);
+
+            const rejectionBin = document.getElementById("rejection-bin-light");
+            const airLow = document.getElementById("air-low-light");
+            const plcReady =document.getElementById("plc-ready-light")
+            const pcReady = document.getElementById("pc-ready-light");
+            const acceptCount = document.getElementById("accept-light");
+            const rejectCount =document.getElementById("reject-light")
+            const reworkCount =document.getElementById("rework-light")
+
+            const signalLight = document.getElementById("coil73-light");
+
+            // if (activeCoils.includes(113)) {
+            //     showNotificationWithHuman();
+            // } else {
+            //     hideNotificationAndHuman();
+            // }
+
+            if (activeCoils.includes(73)) {
+                // Coil 73 is active - show green light
+                signalLight.style.backgroundColor = "limegreen";
+                signalLight.style.boxShadow = "0 0 20px limegreen";
+            } else {
+                // Coil 73 not active - show red light
+                signalLight.style.backgroundColor = "red";
+                signalLight.style.boxShadow = "0 0 10px red";
+            }
+
+            if (activeCoils.includes(116)) {
+                
+                rejectionBin.classList.add("on");
+                console.log("u");
+            } else {
+                rejectionBin.classList.remove("on");
+            }
+
+            if (activeCoils.includes(89)) {
+                
+                acceptCount.classList.add("on");
+                console.log("u");
+            } else {
+                acceptCount.classList.remove("on");
+            }
+            if (activeCoils.includes(90)) {
+                
+                rejectCount.classList.add("on");
+                console.log("u");
+            } else {
+                rejectCount.classList.remove("on");
+            }
+
+            if (activeCoils.includes(91)) {
+                
+                reworkCount.classList.add("on");
+                console.log("u");
+            } else {
+                reworkCount.classList.remove("on");
+            }
+
+            if (activeCoils.includes(98)) {
+                
+                pcReady.classList.add("on");
+                console.log("u");
+            } else {
+                pcReady.classList.remove("on");
+            }
+
+            if (activeCoils.includes(73)) {
+                
+                plcReady.classList.add("on");
+                console.log("u");
+            } else {
+                plcReady.classList.remove("on");
+            }
+            if (activeCoils.includes(113)) {
+                
+                airLow.classList.add("on");
+                console.log("u");
+            } else {
+                airLow.classList.remove("on");
+            }
+
+
+            
+        })
+        .catch(error => console.error("❌ PLC fetch error", error));
+}
+
+// Start checking every 500 ms
+setInterval(fetchActiveCoils, 500);
+
+
+
+
+
+
+let coilCheckIntervalStarted = false;
+let coilCheckIntervalId = null;
+let step1Notified = false;
+let step2Notified = false;
+let step3Notified = false;
+
+function stopPreviousInterval() {
+    if (coilCheckIntervalId) {
+        clearInterval(coilCheckIntervalId);
+        coilCheckIntervalId = null;
+        coilCheckIntervalStarted = false;
+        // console.log("🔁 Previous coil interval stopped");
+    }
+}
+
+function startCoilCheckForStep(step_no) {
+    stopPreviousInterval(); // Ensure previous interval is cleared
+
+    if (step_no === 1) {
+        coilCheckIntervalId = setInterval(() => checkCoilsAndHandleStep1(), 200);
+        // console.log("✅ Coil check interval started for Step 1");
+    } else if (step_no === 2) {
+        coilCheckIntervalId = setInterval(() => checkCoilsAndHandleStep2(), 200);
+        // console.log("✅ Coil check interval started for Step 2");
+    } else if (step_no === 3) {
+        coilCheckIntervalId = setInterval(() => checkCoilsAndHandleStep3(), 200);
+        // console.log("✅ Coil check interval started for Step 3");
+    }
+      else {
+        console.log("❗ Unknown step number:", step_no);
+    }
+
+    coilCheckIntervalStarted = true;
+}
+
+
+
+function checkCoilsAndHandleStep1() {
+    fetch("/get_plc_status/")
+        .then(res => res.json())
+        .then(data => {
+            const activeCoils = data.active_coils || [];
+
+            // Step1 Start light
+            const startLight = document.getElementById("step1-start-light");
+            if (activeCoils.includes(64)) {
+                if (step1Notified) {
+                    hideNotification_plc();
+                    step1Notified = false;
+                }
+
+                const startBtn = document.getElementById("start-btn");
+                if (startBtn) startBtn.click();
+
+                startLight.classList.add("on");
+                console.log("u");
+            } else {
+                startLight.classList.remove("on");
+                if (!step1Notified) {
+                    showNotification_plc("❌ STEP 1 NOT READY");
+                    step1Notified = true;
+                }
+            }
+
+            // Step1 Stop light
+            const stopLight = document.getElementById("step1-stop-light");
+            if (activeCoils.includes(67)) {
+                const stopBtn = document.getElementById("stop-btn");
+                if (stopBtn) stopBtn.click();
+
+                stopLight.classList.add("on");
+                console.log("u");
+            } else {
+                stopLight.classList.remove("on");
+            }
+        });
+}
+
+
+
+function checkCoilsAndHandleStep2() {
+    fetch("/get_plc_status/")
+        .then(res => res.json())
+        .then(data => {
+            const activeCoils = data.active_coils || [];
+
+            // Step 2 Start Light
+            const step2StartLight = document.getElementById("step2-start-light");
+            const step2StopLight = document.getElementById("step2-stop-light");
+
+            if (activeCoils.includes(65)) {
+                hideNotification_plc();
+                step2Notified = false;
+
+                const startBtn = document.getElementById("start-btn");
+                if (startBtn) startBtn.click();
+
+                step2StartLight.classList.add("on");
+
+                // Step 2 Stop Light
+                if (activeCoils.includes(68)) {
+                    const stopBtn = document.getElementById("stop-btn");
+                    if (stopBtn) stopBtn.click();
+                    step2StopLight.classList.add("on");
+                } else {
+                    // Turn OFF Step 2 Stop Light
+                    step2StopLight.classList.remove("on");
+                }
+
+            } else {
+                if (!step2Notified) {
+                    showNotification_plc("❌ Step 2: Coil 65 not active");
+                    step2Notified = true;
+                }
+                // Turn OFF Step 2 Start & Stop lights when coil 65 is not active
+                step2StartLight.classList.remove("on");
+                step2StopLight.classList.remove("on");
+            }
+        });
+}
+
+
+
+
+
+function checkCoilsAndHandleStep3() {
+    fetch("/get_plc_status/")
+        .then(res => res.json())
+        .then(data => {
+            const activeCoils = data.active_coils || [];
+
+            // Step 2 Start Light
+            const step3StartLight = document.getElementById("step3-start-light");
+            const step3StopLight = document.getElementById("step3-stop-light");
+
+            if (activeCoils.includes(114)) {
+                
+                    hideNotification_plc();
+                    step3Notified = false;
+                
+
+                const startBtn = document.getElementById("start-btn");
+                if (startBtn) startBtn.click();
+                step3StartLight.classList.add("on");
+
+                console.log("n");
+
+                if (activeCoils.includes(115)) {
+                    const stopBtn = document.getElementById("stop-btn");
+                    if (stopBtn) stopBtn.click();
+
+                    step3StopLight.classList.add("on");
+                    console.log("n");
+
+                }
+
+                if (activeCoils.includes(116)) {
+                    
+                    step3StopLight.classList.add("on");
+                    console.log("n");
+
+                }
+
+                
+
+            } else if (!step3Notified) {
+                showNotification_plc("❌ Step 3: Coil 66 not active");
+                step3Notified = true;
+            }
+        });
+}
+
+
+
+
+
+// Function to write coil from anywhere
+function writeToCoil(addr, val) {
+    console.clear();
+    // console.log(`📤 Writing to coil Y${addr - 65 + 100} (addr ${addr}) with value: ${val}`);
+
+    fetch("/write_coil/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: addr, value: val })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // console.log("📝 Write response:", data);
+
+        // ✅ Auto reset coil after 1 second
+        if (val === true) {
+            setTimeout(() => {
+                fetch("/write_coil/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ address: addr, value: false })
+                });
+            }, 1000);
+        }
+    });
+}
 
 
 
@@ -2032,14 +2569,28 @@ function getCombinedTextareaParts(probeNumber) {
             };
         }
     } catch (error) {
-        console.error('Error in getCombinedTextareaParts:', error);
+        // console.error('Error in getCombinedTextareaParts:', error);
         return { total: 0, parts: [] };
     }
 }
 
 
-function displaySerialData(parameterNameValues, probe_value, e_value, d_value, o1_value, readingsInput, measurementMode, step_no, lsl, 
+
+function displaySerialData(parameterNameValues, probe_value, e_value, d_value, o1_value, readingsInput, measurementMode,digitsValues, step_no, lsl, 
 usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, parameter_name_single, b_value, b1_value) {
+
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",digitsValues);
+
+if (!coilCheckIntervalStarted) {
+    startCoilCheckForStep(step_no);
+} else {
+    console.warn("⚠️ Coil check already running. Continuing displaySerialData logic for step:", step_no);
+}
+
+
+
+
+            
     console.log("parameterNameValues:", parameterNameValues);
     console.log("parameter_name_single:", parameter_name_single);
     console.log("parameterFactorValues:", parameterFactorValues);
@@ -2103,43 +2654,66 @@ usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, p
             // console.log("Updated displayOutput:", displayOutput);
 
 
-            // Update the readings input only when the continuous update is active and step_no matches
-            if (continuousUpdateInterval && step_no === currentStep) {
+            // Track stats for this inputId
+        if (!window.measurementMap) window.measurementMap = {};
+        const inputId = readingsInput.id;
+        if (!window.measurementMap[inputId]) {
+            window.measurementMap[inputId] = { max: displayOutput, min: displayOutput };
+        } else {
+            let store = window.measurementMap[inputId];
+            if (displayOutput > store.max) store.max = displayOutput;
+            if (displayOutput < store.min) store.min = displayOutput;
+        }
 
-                // Update the readings input based on measurement mode
-                if (measurementMode === "MAX" || measurementMode === "MIN" || measurementMode === "CUR" || measurementMode === "TIR" || measurementMode === "AVR") {
-                    // Update only if the new value is greater than or less than the current value
-                    var currentValue = parseFloat(readingsInput.value);
-                    if (isNaN(currentValue) || (measurementMode === "MAX" && displayOutput > currentValue) ||
-                        (measurementMode === "MIN" && displayOutput < currentValue) ||
-                        (measurementMode === "CUR" || measurementMode === "TIR" || measurementMode === "AVR")) {
-                        readingsInput.value = displayOutput.toFixed(4);
-                        if (measurementMode === "AVR") {
-                            if (typeof maxValue === 'undefined' || displayOutput > maxValue) {
-                                maxValue = displayOutput;
-                                console.log('your max value is this :',maxValue);
-                            }
-                            if (typeof minValue === 'undefined' || displayOutput < minValue) {
-                                minValue = displayOutput;
-                                console.log('your max value is this :',minValue);
-                            }
+        const { max, min } = window.measurementMap[inputId];
 
-                            // Now check if both are present and different
-                            if (typeof maxValue !== 'undefined' && typeof minValue !== 'undefined' && maxValue !== minValue) {
-                                var avrValue = (maxValue + minValue) / 2;
-                                readingsInput.value = avrValue.toFixed(4);
-                                displayOutput = avrValue;
+        if (continuousUpdateInterval && step_no === currentStep) {
+            if (measurementMode === "MAX" || measurementMode === "MIN" || measurementMode === "CUR" ||
+                measurementMode === "TIR" || measurementMode === "RUNOUT" || measurementMode === "AVR" || measurementMode === "DTM") {
 
-                                // console.log("AVR MODE:");
-                                // console.log("Max Value:", maxValue.toFixed(4));
-                                // console.log("Min Value:", minValue.toFixed(4));
-                                // console.log("Average (AVR):", avrValue.toFixed(4));
-                            }
+                let currentValue = parseFloat(readingsInput.value);
+                if (isNaN(currentValue) ||
+                    (measurementMode === "MAX" && displayOutput > currentValue) ||
+                    (measurementMode === "MIN" && displayOutput < currentValue) ||
+                    (measurementMode === "CUR" || measurementMode === "TIR" || measurementMode === "RUNOUT" || measurementMode === "AVR" || measurementMode === "DTM")) {
+
+                    readingsInput.value = displayOutput.toFixed(digitsValues);
+
+                    // AVR as (max-min)/2
+                    if (measurementMode === "AVR") {
+                        const avr = (max - min) / 2;
+                        if (!isNaN(avr)) {
+                            readingsInput.value = avr.toFixed(digitsValues);
+                            displayOutput = avr;
                         }
+                    }
 
-                        if (measurementMode === "TIR") {
-                            readingsInput.value = tirValue.toFixed(4);
+                    // DTM
+                    if (measurementMode === "DTM") {
+                        const dtm = (max + min) / 2;
+                        if (!isNaN(dtm)) {
+                            readingsInput.value = dtm.toFixed(digitsValues);
+                            displayOutput = dtm;
                         }
+                    }
+
+                    // TIR
+                    if (measurementMode === "TIR") {
+                        const tir = max - min;
+                        if (!isNaN(tir)) {
+                            readingsInput.value = tir.toFixed(digitsValues);
+                            displayOutput = tir;
+                        }
+                    }
+
+                    // RUNOUT
+                    if (measurementMode === "RUNOUT") {
+                        const runout = (max - min) / 2;
+                        if (!isNaN(runout)) {
+                            readingsInput.value = runout.toFixed(digitsValues);
+                            displayOutput = runout;
+                        }
+                    }
 
                         // Calculate total length and colored portion length
                         var totalLength, coloredPortionLength, coloredPortion, uncoloredPortion;
@@ -2163,7 +2737,9 @@ usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, p
                             (measurementMode === "MIN" && displayOutput >= lsl && displayOutput <= usl) ||
                             (measurementMode === "CUR" && displayOutput >= lsl && displayOutput <= usl) ||
                             (measurementMode === "AVR" && displayOutput >= lsl && displayOutput <= usl) ||
-                            (measurementMode === "TIR" && tirValue >= lsl && tirValue <= usl)) {
+                            (measurementMode === "DTM" && displayOutput >= lsl && displayOutput <= usl) ||
+                            (measurementMode === "RUNOUT" && displayOutput >= lsl && displayOutput <= usl) ||
+                            (measurementMode === "TIR" && displayOutput >= lsl && displayOutput <= usl)) {
                             color = '#00ff00'; // Green
                             if (color === '#00ff00') {
                                 readingsInput.style.backgroundColor = 'black';
@@ -2179,8 +2755,12 @@ usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, p
                                                                     (displayOutput >= ltl && displayOutput < lsl))) ||
                                     (measurementMode === "AVR" && ((displayOutput > usl && displayOutput <= utl) || 
                                                                     (displayOutput >= ltl && displayOutput < lsl))) ||
-                                    (measurementMode === "TIR" && ((tirValue > usl && tirValue <= utl) || 
-                                                                  (tirValue >= ltl && tirValue < lsl)))) 
+                                    (measurementMode === "DTM" && ((displayOutput > usl && displayOutput <= utl) || 
+                                                                    (displayOutput >= ltl && displayOutput < lsl))) ||
+                                    (measurementMode === "RUNOUT" && ((displayOutput > usl && displayOutput <= utl) || 
+                                                                    (displayOutput >= ltl && displayOutput < lsl))) ||                                
+                                    (measurementMode === "TIR" && ((displayOutput > usl && displayOutput <= utl) || 
+                                                                  (displayOutput >= ltl && displayOutput < lsl)))) 
                                     {
                             color = 'yellow';
                             if (color === 'yellow') {
@@ -2192,7 +2772,9 @@ usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, p
                             (measurementMode === "MIN" && displayOutput > utl || displayOutput <ltl) ||
                             (measurementMode === "CUR" && displayOutput > utl || displayOutput <ltl) ||
                             (measurementMode === "AVR" && displayOutput > utl || displayOutput <ltl) ||
-                            (measurementMode === "TIR" && tirValue > utl || tirValue <ltl)) {
+                            (measurementMode === "DTM" && displayOutput > utl || displayOutput <ltl) ||
+                            (measurementMode === "RUNOUT" && displayOutput > utl || displayOutput <ltl) ||
+                            (measurementMode === "TIR" && displayOutput > utl || displayOutput <ltl)) {
                             color = 'red'; // Green
                             if (color === 'red') {
                                 readingsInput.style.backgroundColor = 'black';
@@ -2341,10 +2923,23 @@ function getCookie(name) {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('punch_textarea').focus();
-    
+document.addEventListener('DOMContentLoaded', function () {
+    const punchTextarea = document.getElementById('punch_textarea');
+
+    // Focus when page loads
+    punchTextarea.focus();
+
+    // Always re-focus when clicked
+    punchTextarea.addEventListener('click', function () {
+        punchTextarea.focus();
+    });
+
+    // (Optional) Focus when it loses focus
+    punchTextarea.addEventListener('blur', function () {
+        punchTextarea.focus();
+    });
 });
+
 
 function handleEnterKeyPress(event) {
     var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
@@ -2425,94 +3020,6 @@ function handleEnterKeyPress(event) {
                 console.log(error);
             }
         });
-
-        // let socket = new WebSocket('ws://localhost:8000/ws/measurement/');
-        // let startBtn = document.getElementById("start-btn");
-        // let stopBtn = document.getElementById("stop-btn");
-        // let cycleModeInput = document.getElementById("cycle_mode");
-        
-        // // Disable button initially
-        // startBtn.disabled = true;
-        // stopBtn.disabled = true;
-
-        // let lastReceivedTime = null;
-        // socket.onopen = function() {
-        //     console.log("✅ WebSocket Connected!");
-
-        //     // Write to address 40005 first
-        //     socket.send(JSON.stringify({ "action": "write", "address": 40002, "value": 0 }));
-
-        //     socket.send(JSON.stringify({ "action": "write", "address": 40003, "value": 0 }));
-
-        //     socket.send(JSON.stringify({ "action": "write", "address": 40004, "value": 0 }));
-
-        //     // Introduce a slight delay before writing to 40001 to ensure proper sequencing
-        //     setTimeout(() => {
-        //         socket.send(JSON.stringify({ "action": "write", "address": 40001, "value": 1 }));
-        //     }, 500); // 500ms delay (adjust if necessary)
-
-        //     // Read from PLC at address 40022
-        //     setTimeout(() => {
-        //         socket.send(JSON.stringify({ "action": "read", "address": 40022 }));
-        //     }, 500); // Ensure reading happens after writes
-        // };
-
-    //     socket.onmessage = function(event) {
-    //         let response = JSON.parse(event.data);
-
-    //         if (response.status === "success") {
-    //             console.log("✅ PLC Response:", response);
-    //             lastReceivedTime = Date.now();
-    //         } else {
-    //             console.error("⚠️ Error:", response.message);
-    //         }
-
-    //         // Handle Read Response - Enable button only if 40022 value is 1
-    //         if (response.address === 40022) {
-    //             console.log("📡 Value from 40022:", response.value);
-
-    //             if (response.value === 1) {
-    //                 startBtn.disabled = false; // Enable button
-    //                 stoptBtn.disabled = false; // Enable button
-    //             } else {
-    //                 startBtn.disabled = true;  // Keep it disabled
-    //                 stoptBtn.disabled = true;
-    //             }
-
-    //             updateCycleMode(true);
-    //         }
-    //     };
-
-    //     socket.onerror = function(error) {
-    //         console.error("❌ WebSocket Error:", error);
-    //     };
-
-    //     socket.onclose = function() {
-    //         console.log("🔴 WebSocket Closed");
-    //         updateCycleMode(false);
-    //     };
-
-    //     // Function to update input box color and text
-    // function updateCycleMode(isConnected) {
-    //     if (isConnected) {
-    //         cycleModeInput.value = "Connected";
-    //         cycleModeInput.style.backgroundColor = "green";
-    //         cycleModeInput.style.color = "white";
-    //         cycleModeInput.style.fontWeight = 'bold'
-    //     } else {
-    //         cycleModeInput.value = "Disconnected";
-    //         cycleModeInput.style.backgroundColor = "red";
-    //         cycleModeInput.style.color = "white";
-    //         cycleModeInput.style.fontWeight = 'bold'
-    //     }
-    // }
-
-    // // Check connection every second
-    // setInterval(() => {
-    //     if (lastReceivedTime && (Date.now() - lastReceivedTime > 500)) {
-    //         updateCycleMode(false); // No response within 2 sec, mark as disconnected
-    //     }
-    // }, 500);
 
     }
 }
@@ -2635,7 +3142,7 @@ function punchOverwriteCancel() {
         var hide = "{{ hide }}"; // Assuming this is how you pass the value from Django template
         console.log("hide:", hide);
          // Initially disable buttons and set box-2 to a stable state
-        var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
+        var buttons = document.querySelectorAll('#start-btn, #stop-btn, #save-btn, #back-btn');
         console.log("buttons from the html page",buttons)
     
     
@@ -2722,7 +3229,7 @@ currentIndex = findFirstValidIndex();
 
 
 document.getElementById('stop-btn').addEventListener('click', function() {
-    console.clear();
+    // console.clear();
 
     // Parse e_values from your Django template
     var e_values_str = "{{ e_values|safe }}";
@@ -2941,9 +3448,56 @@ console.log("step_no_values:",step_no_values);
 //             setOverallCounts(overallCounts);
 //         };
 
-      
 
-        document.addEventListener("DOMContentLoaded", function() {
+
+
+
+// function masterAlert(message, callback = null) {
+//     document.getElementById("master-alert-message").innerText = message;
+//     const wrapper = document.getElementById("master-alert-wrapper");
+//     wrapper.classList.remove("hidden");
+
+//     // Store callback if provided
+//     wrapper.dataset.callback = callback ? callback.toString() : "";
+// }
+
+// function closeMasterAlert() {
+//     const wrapper = document.getElementById("master-alert-wrapper");
+//     wrapper.classList.add("hidden");
+
+//     // Optional callback execution
+//     const callbackCode = wrapper.dataset.callback;
+//     if (callbackCode) {
+//         new Function(callbackCode)();
+//     }
+// }
+
+
+
+
+
+let masterAlertCallback = null;
+
+function masterAlert(message, callback = null) {
+    document.getElementById("master-alert-message").innerText = message;
+    document.getElementById("master-alert-wrapper").classList.remove("hidden");
+
+    // Save callback for later execution
+    masterAlertCallback = callback;
+}
+
+function closeMasterAlert() {
+    document.getElementById("master-alert-wrapper").classList.add("hidden");
+
+    // Call the saved callback if it exists
+    if (typeof masterAlertCallback === "function") {
+        masterAlertCallback();
+        masterAlertCallback = null; // Reset after use
+    }
+}
+
+
+    document.addEventListener("DOMContentLoaded", function() {
     var master_date = "{{last_stored_dates}}";
     console.log("master_date", master_date);
 
@@ -2965,6 +3519,11 @@ console.log("step_no_values:",step_no_values);
             const hours = setting.hour;
             const minutes = setting.minute;
 
+            if (hours === 0 && minutes === 0) {
+                console.log("Skipping alert setup — both hour and minute are 0.");
+                return;
+            }
+
             // Calculate the interval in milliseconds
             const interval = (hours * 60 + minutes) * 60 * 1000;
             
@@ -2978,17 +3537,17 @@ console.log("step_no_values:",step_no_values);
 
             // Set a timeout for the first alert
             setTimeout(() => {
-                alert("Timewise alert: DO MASTERING ONCE AGAIN."); {
-                    // Redirect to the master page if OK is clicked
-                    window.location.href = '/master/'; // Replace '/master-page' with the actual URL of your master page
-                }
+              
+               masterAlert("DO MASTERING", () => {
+                    window.location.href = "/master/";
+                });
+
 
                 // Set intervals for subsequent alerts
                 setInterval(() => {
-                    alert("Timewise alert: DO MASTERING ONCE AGAIN"); {
-                        // Redirect to the master page if OK is clicked
-                        window.location.href = '/master/'; // Replace '/master-page' with the actual URL of your master page
-                    }
+                     masterAlert("DO MASTERING", () => {
+                        window.location.href = "/master/";
+                    });
                 }, interval);
 
             }, timeUntilFirstAlert);
@@ -3002,10 +3561,9 @@ console.log("step_no_values:",step_no_values);
             saveButton.addEventListener('click', () => {
                 clickCount++;
                 if (clickCount === componentNo) {
-                    alert("Timewise alert: It's time for mastering! Click OK to go to the master page."); {
-                        // Redirect to the master page if OK is clicked
-                        window.location.href = '/master/'; // Replace '/master/' with the actual URL of your master page
-                    }
+                    masterAlert("DO MASTERING", () => {
+                        window.location.href = "/master/";
+                    });
                     clickCount = 0; // Reset the count after the alert
                 }
             });
@@ -3135,7 +3693,7 @@ function combineShiftTimeWithCurrentDate(shiftName) {
 // Function to send shift data via AJAX
 // Function to send shift data via AJAX with from_date and end_date
 function postShiftData(shiftName) {
-    let fromDate = combineShiftTimeWithCurrentDate(shiftName); // Shift start time (current date + shift time)
+    let fromDate = combineShiftTimeWithCurrentDate(shiftName);
     let now = new Date();
 
     let day = now.getDate().toString().padStart(2, '0');
@@ -3148,10 +3706,22 @@ function postShiftData(shiftName) {
 
     let endDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${ampm}`;
 
-    setTimeout(() => {
-        window.location.href = `/report/?from_date=${encodeURIComponent(fromDate)}&to_date=${encodeURIComponent(endDate)}`;
-    }, 1000);
+    // ✅ First call reset trigger
+    fetch("/reset_counter/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),  // you might need to add this
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("✅ Reset requested:", data);
 
+        // ✅ Now redirect
+        setTimeout(() => {
+            window.location.href = `/report/?from_date=${encodeURIComponent(fromDate)}&to_date=${encodeURIComponent(endDate)}`;
+        }, 1000);
+    });
 }
 
 
@@ -3204,6 +3774,22 @@ function checkShiftChange() {
 
         if (currentTime === shiftMinusFiveSec) {
             console.log(`Posting before shift change: ${currentShift}`);
+
+            fetch("/shift_change_alert/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({
+                    message: "Shift change alert",
+                    shift: currentShift,
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log("✅ Shift change response:", data))
+            .catch(err => console.error("❌ Error posting shift change:", err));
             postShiftData(currentShift);
         }
     }
@@ -3322,13 +3908,32 @@ $(document).ready(function () {
                 $('#reject').val(response.reject_occurrence);
                 $('#rework').val(response.rework_occurrence);
                 $('#total').val(response.total_occurrence);
-            },
-            error: function (xhr, status, error) {
-                console.log("Error:", xhr.responseText);
-            },
-        });
-    }, 2000); // Delay of 2 seconds
-});
+
+                 $.ajax({
+                    url: "/send_counts_to_plc/",
+                    type: "POST",
+                    headers: { "X-CSRFToken": csrftoken },
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        accept: response.accept_occurrence,
+                        reject: response.reject_occurrence,
+                        rework: response.rework_occurrence,
+                        total:response.total_occurrence
+                    }),
+                    success: function (res) {
+                        console.log("✅ Successfully posted counts to PLC");
+                    },
+                    error: function (xhr) {
+                        console.error("❌ Failed to send counts to PLC:", xhr.responseText);
+                    }
+                });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Error:", xhr.responseText);
+                        },
+                    });
+                }, 2000); // Delay of 2 seconds
+            });
 
 
 function mapProbeToTextareaId(probeNumber) {
@@ -3455,6 +4060,14 @@ $(document).ready(function () {
 
         mergedChannels[comPort] = matches;
 
+        if (card === 'PIEZO_4CH') {
+            setLightColor("com1-light", "green");
+        } else if (card === 'PIEZO_11CH') {
+            setLightColor("com2-light", "green");
+        } else if (card === 'LVDT_4CH') {
+            setLightColor("com3-light", "green");
+        }
+
         // Reset all probes first
         probeIds.forEach(id => $(`#${id}`).val(""));
 
@@ -3485,6 +4098,18 @@ $(document).ready(function () {
         });
     };
 });
+
+
+// Helper to change light color
+function setLightColor(lightId, color) {
+    const el = document.getElementById(lightId);
+    if (!el) return;
+
+    el.style.backgroundColor = color;
+    el.style.boxShadow = color === "green"
+        
+        "0 0 10px red";
+}
 
 </script>
         

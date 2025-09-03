@@ -46,11 +46,11 @@ def paraReport(request):
         part_model = parameterwise_report.objects.values_list('part_model', flat=True).distinct().get()
         print("part_model:", part_model)
 
-        email_1 = CustomerDetails.objects.values_list('primary_email', flat=True).first() or 'No primary email'
-        print('your primary mail id from server to front end now:', email_1)
+        email_1 = CustomerDetails.objects.values_list('primary_email',flat=True).get()
+        print('your primary mail id from server to front end now :',email_1)
 
-        email_2 = CustomerDetails.objects.values_list('secondary_email', flat=True).first() or 'No secondary email'
-        print('your secondary mail id from server to front end now:', email_2)
+        email_2 = CustomerDetails.objects.values_list('secondary_email',flat=True).get()
+        print('your primary mail id from server to front end now :',email_2)
 
         fromDateStr = parameterwise_report.objects.values_list('formatted_from_date', flat=True).get()
         toDateStr = parameterwise_report.objects.values_list('formatted_to_date', flat=True).get()
@@ -270,15 +270,28 @@ def paraReport(request):
             # CSS for scaling down the content to fit a single PDF page
             css = CSS(string='''
                 @page {
-                    size: A4 landscape; /* Landscape for more width */
-                    margin: 1cm;
+                    size: A4 landscape; /* Landscape mode to fit more content horizontally */
+                    margin: 0.5cm; /* Adjust margin as needed */
                 }
-
                 body {
-                    margin: 0;
-                    font-size: 20px; /* Big readable font */
+                    margin: 0; /* Give body some margin to prevent overflow */
+                    transform: scale(0.2); /* Scale down the entire content */
+                    transform-origin: 0 0; /* Ensure the scaling starts from the top-left corner */
                 }
-                
+                .table_data {
+                    width: 5000px; /* Increase the table width */
+                }
+                table {
+                    table-layout: fixed; /* Fix the table layout */
+                    font-size: 20px; /* Increase font size */
+                    border-collapse: collapse; /* Collapse table borders */
+                }
+                table, th, td {
+                    border: 1px solid black; /* Add border to table */
+                }
+                th, td {
+                    word-wrap: break-word; /* Break long words */
+                }
                 .no-pdf {
                     display: none;
                 }
@@ -287,7 +300,7 @@ def paraReport(request):
 
             pdf = HTML(string=html_string).write_pdf(stylesheets=[css])
 
-            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files\ParameterWise"
+            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)
@@ -385,7 +398,7 @@ def paraReport(request):
                         worksheet.set_column(col_num + 1, col_num + 1, 15, number_format)    
 
             # Get the Downloads folder path
-            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files\ParameterWise"
+            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)
@@ -450,3 +463,8 @@ def send_mail_with_pdf(pdf_content, recipient_email, pdf_filename):
         print("Email sent successfully.")
     except Exception as e:
         print(f"Error sending email: {e}")
+
+
+
+
+

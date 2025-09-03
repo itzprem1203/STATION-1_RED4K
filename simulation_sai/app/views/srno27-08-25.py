@@ -1,15 +1,12 @@
-from collections import defaultdict
 from datetime import datetime
-import io
+import pandas as pd
 from django.shortcuts import render
 from django.utils import timezone
-from django.db.models import Q
-import pandas as pd
-from django.template.loader import get_template
+from app.models import MeasurementData, parameter_settings, consolidate_with_srno,CustomerDetails,MailSettings
 from django.http import HttpResponse
-from weasyprint import CSS, HTML
-from app.models import MeasurementData,CustomerDetails, consolidate_without_srno, parameter_settings,MailSettings
-
+from django.template.loader import get_template
+from weasyprint import HTML, CSS
+from io import BytesIO
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -34,31 +31,30 @@ def replace_br_with_newline(text):
     return text
 
 
+
 def convert_columns_to_numeric(df):
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='ignore')
     return df
 
 
-def withoutsrno(request):
+def srno(request):
     if request.method == 'GET':
-        consolidate_without_values = consolidate_without_srno.objects.all()
-        part_model = consolidate_without_srno.objects.values_list('part_model', flat=True).distinct().get()
+        consolidate_values = consolidate_with_srno.objects.all()
+        part_model = consolidate_with_srno.objects.values_list('part_model', flat=True).distinct().get()
+        print("part_model:", part_model)
 
-        # Handling the case when no email exists
         email_1 = CustomerDetails.objects.values_list('primary_email', flat=True).first() or 'No primary email'
-        print('your primary mail id from server to front end now:', email_1)
-
         email_2 = CustomerDetails.objects.values_list('secondary_email', flat=True).first() or 'No secondary email'
-        print('your secondary mail id from server to front end now:', email_2)
 
-        fromDateStr = consolidate_without_srno.objects.values_list('formatted_from_date', flat=True).get()
-        toDateStr = consolidate_without_srno.objects.values_list('formatted_to_date', flat=True).get()
+        fromDateStr = consolidate_with_srno.objects.values_list('formatted_from_date', flat=True).get()
+        toDateStr = consolidate_with_srno.objects.values_list('formatted_to_date', flat=True).get()
 
-        parameter_name = consolidate_without_srno.objects.values_list('parameter_name', flat=True).get()
-        operator = consolidate_without_srno.objects.values_list('operator', flat=True).get()
-        machine = consolidate_without_srno.objects.values_list('machine', flat=True).get()
-        shift = consolidate_without_srno.objects.values_list('shift', flat=True).get()
+        parameter_name = consolidate_with_srno.objects.values_list('parameter_name', flat=True).get()
+        operator = consolidate_with_srno.objects.values_list('operator', flat=True).get()
+        machine = consolidate_with_srno.objects.values_list('machine', flat=True).get()
+        shift = consolidate_with_srno.objects.values_list('shift', flat=True).get()
+        job_no = consolidate_with_srno.objects.values_list('job_no', flat=True).get()
 
         date_format_input = '%d-%m-%Y %I:%M:%S %p'
         from_datetime_naive = datetime.strptime(fromDateStr, date_format_input)
@@ -67,12 +63,15 @@ def withoutsrno(request):
         from_datetime = timezone.make_aware(from_datetime_naive, timezone.get_default_timezone())
         to_datetime = timezone.make_aware(to_datetime_naive, timezone.get_default_timezone())
 
+        # Get parameter names that should not be filtered out
+        excluded_parameters = parameter_settings.objects.filter(hide_checkbox=True).values_list('parameter_name', flat=True)
+
         filter_kwargs = {
             'date__range': (from_datetime, to_datetime),
             'part_model': part_model,
         }
 
-        if parameter_name != "ALL":
+        if parameter_name != "ALL" and parameter_name not in excluded_parameters:
             filter_kwargs['parameter_name'] = parameter_name
 
         if operator != "ALL":
@@ -84,33 +83,24 @@ def withoutsrno(request):
         if shift != "ALL":
             filter_kwargs['shift'] = shift
 
+        if job_no != "ALL":
+            filter_kwargs['comp_sr_no'] = job_no
+
         filtered_data = MeasurementData.objects.filter(**filter_kwargs).values()
-        distinct_comp_sr_nos = filtered_data.filter(Q(comp_sr_no__isnull=True) | Q(comp_sr_no__exact='')).order_by('date')
-        if not distinct_comp_sr_nos:
-            context = {
-                'no_results': True
-            }
-            return render(request, 'app/reports/consolidateWithoutSrNo.html', context)
 
-        grouped_by_date = defaultdict(list)
-        for entry in distinct_comp_sr_nos:
-            grouped_by_date[entry['date']].append(entry)
-
-        distinct_dates = grouped_by_date.keys()
-        total_count = len(distinct_dates)
-
-        data_dict = {
-            'Date': [],
-            'Operator': [],
-            'Shift': []
-        }
         hidden_parameters = parameter_settings.objects.filter(hide_checkbox=True, model_id=part_model).values_list('parameter_name', flat=True)
-        print('your DATA IS THIS FOR HIODDEN PARAMETERS:::',hidden_parameters)
 
         # Ensure we include all parameter names that should not be filtered
         parameter_data = parameter_settings.objects.filter(
             model_id=part_model
         ).exclude(parameter_name__in=hidden_parameters).values('parameter_name', 'utl', 'ltl').order_by('id')
+
+        data_dict = {
+            'Date': [],
+            'Job Number': [],
+            'Shift': [],
+            'Operator': [],
+        }
 
         for param in parameter_data:
             param_name = param['parameter_name']
@@ -120,107 +110,108 @@ def withoutsrno(request):
             data_dict[key] = []
 
         data_dict['Status'] = []
+        status_counts = {'ACCEPT': 0, 'REJECT': 0, 'REWORK': 0}
 
+        distinct_comp_sr_nos = filtered_data.exclude(comp_sr_no__isnull=True).exclude(comp_sr_no__exact='').values_list('comp_sr_no', flat=True).distinct().order_by('date')
 
+        for comp_sr_no in distinct_comp_sr_nos:
+            filter_params = filter_kwargs.copy()
+            filter_params['comp_sr_no'] = comp_sr_no
 
-        accept_count = 0
-        rework_count = 0
-        reject_count = 0
+            part_status = MeasurementData.objects.filter(**filter_params).values_list('part_status', flat=True).distinct().first()
 
-        for date, records in grouped_by_date.items():
-            formatted_date = date.strftime('%d-%m-%Y %I:%M:%S %p')
-            operator = records[0]['operator']
-            shift = records[0]['shift']
-            part_status = records[0]['part_status']
+            comp_sr_no_data = MeasurementData.objects.filter(**filter_params).values(
+                'parameter_name', 'readings', 'status_cell', 'operator', 'shift', 'machine', 'date'
+            )
 
-            data_dict['Date'].append(formatted_date)
-            data_dict['Operator'].append(operator)
-            data_dict['Shift'].append(shift)
+            combined_row = {
+                'Date': '',
+                'Job Number': comp_sr_no,
+                'Shift': '',
+                'Operator': '',
+                'Status': ''
+            }
 
-            temp_dict = {key: '' for key in data_dict.keys() if key not in ['Date', 'Operator', 'Shift', 'Status']}
-
-            for record in records:
-                param_name = record.get('parameter_name')
-
-                # Skip hidden parameters
-                if param_name in hidden_parameters:
-                    continue
+            for data in comp_sr_no_data:
+                parameter_name = data.get('parameter_name')
 
                 try:
-                    parameter_setting = parameter_settings.objects.get(parameter_name=param_name, model_id=part_model)
+                    parameter_setting = parameter_settings.objects.get(parameter_name=parameter_name, model_id=part_model)
                     utl = parameter_setting.utl
                     ltl = parameter_setting.ltl
-                    key = f"{param_name} <br>{utl} <br>{ltl}"
-                    # Process further as needed
+                    key = f"{parameter_name} <br>{utl} <br>{ltl}"
+                    formatted_date = data['date'].strftime('%d-%m-%Y %I:%M:%S %p')
                 except parameter_settings.DoesNotExist:
-                    print(f"No parameter_settings found for parameter_name={param_name} and model_id={part_model}")
+                    print(f"No parameter_settings found for {parameter_name} and model_id={part_model}")
                     continue
 
-                if record['readings'] is None or record['readings'] == '':
-                    if record['status_cell'] == 'ACCEPT':
-                        readings_html = f'<span style="background-color: #00ff00; padding: 2px;">ACCEPT</span>'
-                    elif record['status_cell'] == 'REWORK':
-                        readings_html = f'<span style="background-color: yellow; padding: 2px;">REWORK</span>'
-                    elif record['status_cell'] == 'REJECT':
-                        readings_html = f'<span style="background-color: red; padding: 2px;">REJECT</span>'
-                    else:
-                        readings_html = '<span style="padding: 2px;">N/A</span>'
+                # Check if the parameter is excluded from filtering
+                if parameter_name in excluded_parameters:
+                    continue  # Skip filtering for this parameter
+
+                reading = data["readings"]
+                try:
+                    formatted_reading = "{:.3f}".format(float(reading))
+                except (TypeError, ValueError):
+                    formatted_reading = "N/A"
+
+                status_cell = data.get("status_cell")
+                if status_cell == 'ACCEPT':
+                    readings_html = f'<span style="background-color: #00ff00; padding: 2px;">{formatted_reading}</span>'
+                elif status_cell == 'REWORK':
+                    readings_html = f'<span style="background-color: yellow; padding: 2px;">{formatted_reading}</span>'
+                elif status_cell == 'REJECT':
+                    readings_html = f'<span style="background-color: red; padding: 2px;">{formatted_reading}</span>'
                 else:
-                    # If readings exist, use the actual readings
-                    try:
-                        formatted_reading = "{:.3f}".format(float(record["readings"]))
-                    except (ValueError, TypeError):
-                        formatted_reading = record["readings"]  # fallback to original if conversion fails
+                    readings_html = f'<span style="padding: 2px;">{formatted_reading}</span>'
 
-                    if record['status_cell'] == 'ACCEPT':
-                        readings_html = f'<span style="background-color: #00ff00; padding: 2px;">{formatted_reading}</span>'
-                    elif record['status_cell'] == 'REWORK':
-                        readings_html = f'<span style="background-color: yellow; padding: 2px;">{formatted_reading}</span>'
-                    elif record['status_cell'] == 'REJECT':
-                        readings_html = f'<span style="background-color: red; padding: 2px;">{formatted_reading}</span>'
-                    else:
-                        readings_html = f'<span style="padding: 2px;">{formatted_reading}</span>'
-                
-                temp_dict[key] = readings_html
-
-            for key in temp_dict:
-                data_dict[key].append(temp_dict[key])
+                combined_row[key] = readings_html
+                combined_row['Date'] = formatted_date
+                combined_row['Operator'] = data['operator']
+                combined_row['Shift'] = data['shift']
 
             if part_status == 'ACCEPT':
-                status_html = f'<span style="background-color: #00ff00; padding: 2px;">{part_status}</span>'
-                accept_count += 1
+                status_html = '<span style="background-color: #00ff00; padding: 2px;">ACCEPT</span>'
+                status_counts['ACCEPT'] += 1
             elif part_status == 'REWORK':
-                status_html = f'<span style="background-color: yellow; padding: 2px;">{part_status}</span>'
-                rework_count += 1
+                status_html = '<span style="background-color: yellow; padding: 2px;">REWORK</span>'
+                status_counts['REWORK'] += 1
             elif part_status == 'REJECT':
-                status_html = f'<span style="background-color: red; padding: 2px;">{part_status}</span>'
-                reject_count += 1
+                status_html = '<span style="background-color: red; padding: 2px;">REJECT</span>'
+                status_counts['REJECT'] += 1
+            else:
+                status_html = '<span style="padding: 2px;">N/A</span>'
 
-            data_dict['Status'].append(status_html)
+            combined_row['Status'] = status_html
 
-       
+            for key in data_dict:
+                data_dict[key].append(combined_row.get(key, ''))
+
+        print(f"Status counts: ACCEPT={status_counts['ACCEPT']}, REJECT={status_counts['REJECT']}, REWORK={status_counts['REWORK']}")
+
         df = pd.DataFrame(data_dict)
-        df.index = df.index + 1  # Shift index by 1 to start from 1
+        df.index = df.index + 1
 
         table_html = df.to_html(index=True, escape=False, classes='table table-striped')
 
         context = {
             'table_html': table_html,
-            'consolidate_without_values': consolidate_without_values,
-            'accept_count': accept_count,
-            'rework_count': rework_count,
-            'reject_count': reject_count,
-            'total_count': total_count,
+            'consolidate_values': consolidate_values,
+            'total_count': len(distinct_comp_sr_nos),
+            'accept_count': status_counts['ACCEPT'],
+            'reject_count': status_counts['REJECT'],
+            'rework_count': status_counts['REWORK'],
             'email_1': email_1,
-            'email_2': email_2
-        }  
-        request.session['data_dict'] = data_dict  
-        return render(request, 'app/reports/consolidateWithoutSrNo.html', context)
+            'email_2': email_2,
+        }
+
+        request.session['data_dict'] = data_dict
+
+        return render(request, 'app/reports/consolidateSrNo.html', context)
 
     elif request.method == 'POST':
         export_type = request.POST.get('export_type')
         recipient_email = request.POST.get('recipient_email')
-        print('your recipient mail from front end:',recipient_email)
         data_dict = request.session.get('data_dict')  # Retrieve data_dict from session
         if data_dict is None:
             return HttpResponse("No data available for export", status=400)
@@ -231,10 +222,10 @@ def withoutsrno(request):
        
 
         if export_type == 'pdf' or export_type == 'send_mail':
-            template = get_template('app/reports/consolidateWithoutSrNo.html')
+            template = get_template('app/reports/consolidateSrNo.html')
             context = {
                 'table_html': df.to_html(index=True, escape=False, classes='table table-striped table_data'),
-                'consolidate_without_values': consolidate_without_srno.objects.all(),
+                'consolidate_values': consolidate_with_srno.objects.all(),
                 'total_count': df.shape[0],  # Use DataFrame shape for total count
                 'accept_count': df[df['Status'].str.contains('ACCEPT')].shape[0],
                 'reject_count': df[df['Status'].str.contains('REJECT')].shape[0],
@@ -245,29 +236,43 @@ def withoutsrno(request):
 
             # CSS for scaling down the content to fit a single PDF page
             css = CSS(string='''
-               @page {
-                    size: A4 landscape; /* Landscape for more width */
-                    margin: 1cm;
+                @page {
+                    size: A4 landscape; /* Landscape mode to fit more content horizontally */
+                    margin: 0.5cm; /* Adjust margin as needed */
                 }
-
                 body {
-                    margin: 0;
-                    font-size: 20px; /* Big readable font */
+                    margin: 0; /* Give body some margin to prevent overflow */
+                    transform: scale(0.2); /* Scale down the entire content */
+                    transform-origin: 0 0; /* Ensure the scaling starts from the top-left corner */
                 }
-                
+                .table_data {
+                    width: 5000px; /* Increase the table width */
+                }
+                table {
+                    table-layout: fixed; /* Fix the table layout */
+                    font-size: 20px; /* Increase font size */
+                    border-collapse: collapse; /* Collapse table borders */
+                }
+                table, th, td {
+                    border: 1px solid black; /* Add border to table */
+                }
+                th, td {
+                    word-wrap: break-word; /* Break long words */
+                }
                 .no-pdf {
                     display: none;
                 }
             ''')
 
-
             pdf = HTML(string=html_string).write_pdf(stylesheets=[css])
 
-            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files\WithoutSrNo"
+            # Get the Downloads folder path
+            # Get the Downloads folder path
+            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)
-            pdf_filename = f"consolidateWithoutSrNo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.pdf"
+            pdf_filename = f"consolidateSrNo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.pdf"
             pdf_file_path = os.path.join(target_folder, pdf_filename)
 
             # Save the PDF file in the Downloads folder
@@ -281,20 +286,20 @@ def withoutsrno(request):
                   # Pass success message to the context to show on the front end
                 success_message = "PDF generated successfully!"
                 context['success_message'] = success_message
-                return render(request, 'app/reports/consolidateWithoutSrNo.html', context)
+                return render(request, 'app/reports/consolidateSrNo.html', context)
 
             elif export_type == 'send_mail':
-                pdf_filename = f"consolidateWithoutSrNo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.pdf"
+                pdf_filename = f"consolidateSrNo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.pdf"
                 # Send the PDF as an email attachment
                 send_mail_with_pdf(pdf, recipient_email, pdf_filename)
                 success_message = "PDF generated and email sent successfully!"
-                return render(request, 'app/reports/consolidateWithoutSrNo.html', {'success_message': success_message, **context})
+                return render(request, 'app/reports/consolidateSrNo.html', {'success_message': success_message, **context})
         elif request.method == 'POST' and export_type == 'excel':
 
-            template = get_template('app/reports/consolidateWithoutSrNo.html')
+            template = get_template('app/reports/consolidateSrNo.html')
             context = {
                 'table_html': df.to_html(index=True, escape=False, classes='table table-striped table_data'),
-                'consolidate_values': consolidate_without_srno.objects.all(),
+                'consolidate_values': consolidate_with_srno.objects.all(),
                 'total_count': df.shape[0],  # Use DataFrame shape for total count
                 'accept_count': df[df['Status'].str.contains('ACCEPT')].shape[0],
                 'reject_count': df[df['Status'].str.contains('REJECT')].shape[0],
@@ -309,16 +314,17 @@ def withoutsrno(request):
             df = convert_columns_to_numeric(df)
 
             # Create a new DataFrame for parameterwise_values
-            consolidateWithoutSrNowise_values = consolidate_without_srno.objects.all()
-            consolidateWithoutSrNowise_data = []
+            consolidateSrNowise_values = consolidate_with_srno.objects.all()
+            consolidateSrNowise_data = []
 
-            for data in consolidateWithoutSrNowise_values:
-                consolidateWithoutSrNowise_data.append({
+            for data in consolidateSrNowise_values:
+                consolidateSrNowise_data.append({
                     'PARTMODEL': data.part_model,
                     'PARAMETERNAME': data.parameter_name,
                     'OPERATOR': data.operator,
                     'MACHINE':data.machine,
                     'VENDOR CODE': data.vendor_code,
+                    'JOB NO': data.job_no,
                     'SHIFT': data.shift,
                     'FROM DATE': data.formatted_from_date,
                     'TO DATE': data.formatted_to_date,
@@ -329,20 +335,20 @@ def withoutsrno(request):
                     'REWORK_COUNT': df[df['Status'].str.contains('REWORK')].shape[0],
                 })
 
-            consolidateWithoutSrNowise_df = pd.DataFrame(consolidateWithoutSrNowise_data)
+            consolidateSrNowise_df = pd.DataFrame(consolidateSrNowise_data)
 
             # Create an Excel writer object using BytesIO as a file-like object
             excel_buffer = BytesIO()
             with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
                 # Write parameterwise_df to the Excel sheet first
-                consolidateWithoutSrNowise_df.to_excel(writer, sheet_name='consolidateWithoutSrNo', index=False, startrow=0)
+                consolidateSrNowise_df.to_excel(writer, sheet_name='consolidateSrNo', index=False, startrow=0)
 
                 # Write the original DataFrame to the same sheet below the parameterwise data
-                df.to_excel(writer, sheet_name='consolidateWithoutSrNo', index=True, startrow=len(consolidateWithoutSrNowise_df) + 2)
+                df.to_excel(writer, sheet_name='consolidateSrNo', index=True, startrow=len(consolidateSrNowise_df) + 2)
 
                 # Get access to the workbook and worksheet objects
                 workbook = writer.book
-                worksheet = writer.sheets['consolidateWithoutSrNo']
+                worksheet = writer.sheets['consolidateSrNo']
 
                 # Format for multi-line header
                 header_format = workbook.add_format({
@@ -352,26 +358,25 @@ def withoutsrno(request):
                     'bold': True        # Make the headers bold
                 })
 
-                # Apply formatting to the headers of the parameterwise data
-                for col_num, value in enumerate(consolidateWithoutSrNowise_df.columns.values):
+                for col_num, value in enumerate(consolidateSrNowise_df.columns.values):
                     worksheet.write(0, col_num, value, header_format)
 
-                # Apply formatting to the headers of the main DataFrame (startrow=len(parameterwise_df)+2)
                 for col_num, value in enumerate(df.columns.values):
-                    worksheet.write(len(consolidateWithoutSrNowise_df) + 2, col_num + 1, value, header_format)
-
+                    worksheet.write(len(consolidateSrNowise_df) + 2, col_num + 1, value, header_format)
 
                 # ✅ Format numeric columns so Excel treats them correctly
                 number_format = workbook.add_format({'num_format': '0.000'})
                 for col_num, col in enumerate(df.columns):
                     if pd.api.types.is_numeric_dtype(df[col]):
-                        worksheet.set_column(col_num + 1, col_num + 1, 15, number_format)    
+                        worksheet.set_column(col_num + 1, col_num + 1, 15, number_format)
 
-            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files\WithoutSrNo"
+            # Get the Downloads folder path
+            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)
-            excel_filename = f"consolidateWithoutSrNo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"
+
+            excel_filename = f"consolidateSrNo_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"
             excel_file_path = os.path.join(target_folder, excel_filename)
 
             # Save the Excel file in the Downloads folder
@@ -385,7 +390,7 @@ def withoutsrno(request):
             success_message = "Excel file generated successfully!"
             
             # Render success message in the frontend
-            return render(request, 'app/reports/consolidateWithoutSrNo.html', {'success_message': success_message ,**context})
+            return render(request, 'app/reports/consolidateSrNo.html', {'success_message': success_message ,**context})
 
         return HttpResponse("Unsupported request method", status=405)
 

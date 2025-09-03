@@ -72,7 +72,7 @@ body {
         .input-box-container{
             background-color:rgb(178, 178, 226);
             padding: 8px;
-             width: 370px;
+             width: 310px;
              height: 185px;
              margin: 1px;
              box-sizing: border-box;
@@ -395,51 +395,6 @@ input[type="radio"] {
 
 
 
-@keyframes walkInBox {
-    0% { left: -200px; }
-    100% { left: 20px; }
-}
-@keyframes fadeInBox {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-@keyframes pulse {
-    0% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
-    50% { box-shadow: 0 0 40px rgba(255,0,0,1); }
-    100% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
-}
-
-#plc-notification {
-    position: fixed;
-    width: 95vw;
-    height: 80vh;
-    text-align: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: red;
-    color: white;
-    font-size: 5vw; /* reduced font size */
-    font-weight: bold;
-    padding: 30px 50px;
-    border-radius: 15px;
-    z-index: 9999;
-    opacity: 0;
-    overflow: hidden; /* keep human inside box */
-    display: none; /* Hides completely by default */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-
-#human-inside {
-    position: absolute;
-    bottom: 5px;
-    left: -200px; /* start hidden to left */
-    width: 250px; /* increased size */
-}
 
              
  </style>
@@ -600,9 +555,9 @@ input[type="radio"] {
     ❌ Coil 64 not active — waiting to start process...
 </div>
 
-    <div id="plc-notification">
-    <!-- <img id="human-inside" src="/static/images/air.png" alt="Human Writer"> -->
-    <div id="plc-message"></div>
+    <!-- <div id="plc-notification">
+    <img id="human-inside" src="/static/images/air.png" alt="Human Writer">
+    <div id="plc-message"></div> -->
 </div>
 
 
@@ -667,15 +622,31 @@ function getCSRFToken() {
     
     
     function MeasureBtnClick() {
-        window.location.href = '/measurement/'; // Replace '/measurement' with the actual URL of the measurement page
+    const btn = document.getElementById("measureBtn");
+    if (btn.disabled) {
+        console.log("⛔ Measurement blocked: button disabled");
+        return; // stop if disabled
     }
-    function redirectToMasterPage() {
-        if (event.key === 'F1') {
-            window.location.href = '/measurement/';
-            event.preventDefault();
-        }
+    window.location.href = '/measurement/';
+}
+
+function redirectToMasterPage(event) {
+    const btn = document.getElementById("measureBtn");
+
+    // ✅ Block F1 when button disabled
+    if (btn.disabled && event.key === 'F1') {
+        console.log("⛔ F1 blocked: button disabled");
+        event.preventDefault();
+        return;
     }
-    document.addEventListener('keydown', redirectToMasterPage);
+
+    if (event.key === 'F1') {
+        event.preventDefault();
+        window.location.href = '/measurement/';
+    }
+}
+
+document.addEventListener('keydown', redirectToMasterPage);
 
  
 
@@ -1844,58 +1815,58 @@ function onRadioButtonChange(event) {
         updateMastering(selectedRadioButtonId);
     }
 
-let isVisible = false;
-let typingTimer = null;
+// let isVisible = false;
+// let typingTimer = null;
 
-function typeMessage(message, element, speed = 100) {
-    element.innerText = "";
-    let index = 0;
-    typingTimer = setInterval(() => {
-        element.innerText += message[index];
-        index++;
-        if (index >= message.length) {
-            clearInterval(typingTimer);
-        }
-    }, speed);
-}
+// function typeMessage(message, element, speed = 100) {
+//     element.innerText = "";
+//     let index = 0;
+//     typingTimer = setInterval(() => {
+//         element.innerText += message[index];
+//         index++;
+//         if (index >= message.length) {
+//             clearInterval(typingTimer);
+//         }
+//     }, speed);
+// }
 
-function showNotificationWithHuman() {
-    if (isVisible) return;
-    isVisible = true;
+// function showNotificationWithHuman() {
+//     if (isVisible) return;
+//     isVisible = true;
 
-    const box = document.getElementById("plc-notification");
-    const human = document.getElementById("human-inside");
-    const msg = document.getElementById("plc-message");
+//     const box = document.getElementById("plc-notification");
+//     const human = document.getElementById("human-inside");
+//     const msg = document.getElementById("plc-message");
 
-    // Make visible
-    box.style.display = "flex";
-    box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
-    box.style.opacity = "1";
+//     // Make visible
+//     box.style.display = "flex";
+//     box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
+//     box.style.opacity = "1";
 
-    setTimeout(() => {
-        human.style.animation = "walkInBox 2s forwards";
-    }, 300);
+//     setTimeout(() => {
+//         human.style.animation = "walkInBox 2s forwards";
+//     }, 300);
 
-    setTimeout(() => {
-        typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
-    }, 2300);
-}
+//     setTimeout(() => {
+//         typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
+//     }, 2300);
+// }
 
-function hideNotificationAndHuman() {
-    clearInterval(typingTimer);
+// function hideNotificationAndHuman() {
+//     clearInterval(typingTimer);
 
-    const box = document.getElementById("plc-notification");
-    const human = document.getElementById("human-inside");
+//     const box = document.getElementById("plc-notification");
+//     const human = document.getElementById("human-inside");
 
-    box.style.display = "none"; // Completely remove from layout
-    box.style.opacity = "0";
-    box.style.animation = "";
+//     box.style.display = "none"; // Completely remove from layout
+//     box.style.opacity = "0";
+//     box.style.animation = "";
 
-    human.style.left = "-200px";
-    human.style.animation = "";
+//     human.style.left = "-200px";
+//     human.style.animation = "";
 
-    isVisible = false;
-}
+//     isVisible = false;
+// }
 
 
 
@@ -1919,11 +1890,22 @@ function fetchActiveCoils() {
             const activeCoils = data.active_coils || [];
             console.log("✅ Step 1 coils:", activeCoils);
 
-            if (activeCoils.includes(113)) {
-                showNotificationWithHuman();
-            } else {
-                hideNotificationAndHuman();
+                        const measureBtn = document.getElementById("measureBtn");
+            if (measureBtn) {
+                if (activeCoils.includes(117)) {
+                    measureBtn.disabled = true;
+                    measureBtn.style.opacity = "0.5"; // optional visual feedback
+                    console.log("⛔ Measurement disabled (coil 80 active)");
+                    window.location.href = "/measurement/"
+                } else {
+                    measureBtn.disabled = false;
+                    measureBtn.style.opacity = "1"; 
+
+                }
             }
+
+            
+
 
 
             const masteringSelect = document.getElementById("mastering");
@@ -2126,7 +2108,7 @@ function updateValues() {
                 var label3 = document.createElement('label');
                 label3.textContent = 'H';
                 label3.style.top = '40px';
-                label3.style.left = '-78%';
+                label3.style.left = '-85%';
                 label3.style.position = 'relative';
                 label3.style.fontSize = '2.5vh';
                 label3.style.fontWeight = 'bold';
@@ -2151,7 +2133,7 @@ function updateValues() {
                 inputBox2.type = 'text';
                 inputBox2.id = 'input2-' + i;
                 inputBox2.className = 'input2-box';
-                inputBox2.style.width = '8vw';
+                inputBox2.style.width = '7vw';
                 inputBox2.style.height = '7vh';
                 inputBox2.style.position = 'relative';  // Add this line
                 inputBox2.style.left = '25px';          // Correct this line

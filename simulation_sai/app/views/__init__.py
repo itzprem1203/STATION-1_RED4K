@@ -34,3 +34,7 @@ from .cycle_time import save_time
 from .cycle_time import get_time
 from .plc import reset_counter
 from .plc import send_counts_to_plc
+from .plc import post_pc_ready
+from .clearmeasurement import clearmeasurement
+from .clearmeasurement import deactivate_punch
+from .clearmeasurement import get_active_punch

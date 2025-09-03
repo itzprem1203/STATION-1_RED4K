@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
+
     <link rel="stylesheet" href="{% static 'fontawesome-free-6.7.2-web/css/all.min.css' %}">
     <script src="{% static 'jquery-jquery-f79d5f1/dist/jquery.min.js' %}"></script>
   <!-- Add XLSX library for Excel conversion -->
@@ -16,74 +16,53 @@
    
    <script src="{% static 'parallax-jsPDF-57cbe94/dist/jspdf.umd.min.js' %}"></script>
 
-    <title>Master Report</title>
+    <title>Jobwise Report</title>
 
     <style>
-               body {
-    border: 2px solid white;
-    font-family: Arial, sans-serif;
-    font-size: 16px; /* big default text */
-}
-
-.data-box {
-
-    padding: 10px;
-    margin-bottom: 20px;
-    overflow-x: auto;
-    overflow-y: auto;
-}
-
-.first-table {
-    background-color: #fff;
-    border: 2px solid #000;
-    text-align: center;
-    margin-bottom: 20px;
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.label {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-}
-
-.value {
-    font-weight: bold;
-    font-size: 12px;
-}
-
-/* ==== Main Table ==== */
-.table_data table {
-    width: 100%;              /* full page width */
-    border-collapse: collapse;
-    table-layout: fixed;      /* keep columns uniform */
-    font-size: 12px;          /* nice and readable */
-}
-
-.table_data th,
-.table_data td {
-    border: 1.5px solid black;
-    text-align: center;
-    font-weight: bold;
-    padding: 1px;
-    height: 45px;             /* ~15 rows per page */
-    word-wrap: break-word;
-    page-break-inside: avoid; /* don’t cut rows between pages */
-}
-
-/* Fix header row */
-.table_data th {
-    background-color: #f2f2f2;
-    font-size: 10px;
-}
-
-/* For first summary table */
-.first-table td {
-    border: 1.5px solid black;
-    width: 20%;               /* each column takes space evenly */
-    padding: 6px;
-    font-size: 14px;
-}
+        .data-box {
+            padding: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+        
+         
+        .first-table {
+            background-color: #fff;
+            text-align: center;
+        }
+        .label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10px;
+        }
+        .value {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        th, td {
+            border: 1px solid #ccc;
+            text-align: center;
+            font-weight: bold;
+            width: 100px;
+            font-size: 15px;
+            border: 1px solid black; /* Add borders to table cells */
+            padding: 4px; /* Add padding to table cells */
+        }
+        
+        
+        .table_data th:nth-child(3) {
+            width: 250px; /* Specific width for the 2nd th element */
+        }
+        .table_data th:nth-child(2) {
+            width: 200px; /* Specific width for the 2nd th element */
+        }
+        .table_data th:nth-child(1) {
+            width: 20px; /* Specific width for the 2nd th element */
+        }
+        .first-table td{
+            width: 250px;
+        }
         #h1{
             color: red; 
             text-align: center;
@@ -98,7 +77,7 @@
 .dropdown {
             position: absolute;
             top: 10px;
-            margin-left: 50px;
+            right: 50px;
             display: inline-block;
         }
         .dropdown-content {
@@ -120,7 +99,7 @@
             background-color: lightpink;
             display: block;
         }
-           
+            
         table {
             width: auto; /* Allow the table to size based on content */
             table-layout: auto; /* Allow the table to adjust its layout based on content */
@@ -130,7 +109,7 @@
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: #f9f9f9; /* Alternate row background color */
         }
-        #prevButton{
+#prevButton{
     width: 80px;
     height: 35px;
     margin-top: -35px;
@@ -204,9 +183,10 @@
 
 .container {
     margin: auto;
-    border: 2px solid white;
+    border: 2px solid black;
     margin-top: 0px;
-}
+}     
+
 #loading_spinner {
     position: fixed;
     top: 50%;
@@ -229,12 +209,12 @@
         <i class="fas fa-spinner fa-spin"></i> 
         <div style="text-align: center; margin-left: -120px; font-size: 50px; font-weight: bold; color: rgb(128, 36, 0);">
             Please wait a moment...
-        </div>
-    </div>    
+        </div>  
+    </div>      
     <div class="container">
         <div class="container-1">
             <div id="heading"></div>
-            <form id="exportForm" method="post" action="{% url 'masterReport' %}" style="margin-top:-25px ;">
+            <form id="exportForm" method="post" action="{% url 'jobReport' %}" style="margin-top:-25px ;">
                 {% csrf_token %}
                 <div class="button-container">
                     <!-- Send Mail Button (Left Side) -->
@@ -262,11 +242,7 @@
     <div id="popupMessage" class="no-pdf"></div>
 
 
-    
-    
-    
     <script>
-
 
 $(document).ready(function () {
         $("#pdf_btn").click(function () {
@@ -281,6 +257,7 @@ $(document).ready(function () {
             $("#loading_spinner").show(); // Show the spinner
         });
     });
+
 
 
         function hideDropdown() {
@@ -305,51 +282,41 @@ if (successMessage) {
        
     </script>
     
+    
     <table class="first-table">
-        <h1 id="h1">Master Report</h1>
-        {% for data in master_report_values %}
+        <h1 id="h1">Jobwise Report</h1>
+        {% for data in jobwise_values %}
         <tr>
             <td>
                 <span class="label">PARTMODEL:</span>
                 <span class="value">{{ data.part_model }}</span>
             </td>
             <td>
-                <span class="label">PARAMETER NAME:</span>
-                <span class="value">{{ data.parameter_name }}</span>
+                <span class="label">JOB NO:</span>
+                <span class="value">{{ data.job_no }}</span>
             </td>
-            <td>
-                <span class="label">OPERATOR:</span>
-                <span class="value">{{ data.operator }}</span>
-            </td>
-            <td>
-                <span class="label">FROM DATE:</span>
-                <span class="value">{{ data.formatted_from_date }}</span>
-            </td>
-            <td>
-                <span class="label">TO DATE:</span>
-                <span class="value">{{ data.formatted_to_date }}</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span class="label">MACHINE:</span>
-                <span class="value">{{ data.machine }}</span>
-            </td>
-            <td>
-                <span class="label">VENDOR CODE:</span>
-                <span class="value">{{ data.vendor_code }}</span>
-            </td>
-           
-            <td>
-                <span class="label">SHIFT:</span>
-                <span class="value">{{ data.shift }}</span>
-            </td>
+            
             <td>
                 <span class="label">CURRENT DATE:</span>
                 <span class="value">{{ data.current_date_time }}</span>
             </td>
         </tr>
-    
+        <tr>
+            <td>
+                <span class="label">OPERATOR:</span>
+                <span class="value">{{operators_values}}</span>
+            </td>
+            <td>
+                <span class="label">SHIFT:</span>
+                <span class="value">{{shifts_values}}</span>
+            </td>
+            <td>
+                <span class="label">OVERALL STATUS:</span>
+                <span class="value">{{part_status_values}}</span>
+            </td>
+            
+        </tr>
+        
         {% endfor %}
     </table>
     
@@ -365,16 +332,18 @@ if (successMessage) {
     </div>
 {% endif %}
 </div>
-
 <!-- JavaScript to dynamically update status counts and print to console -->
 <script>
+
+
+
+
+
 
 document.getElementById('prevButton').addEventListener('click', function() {
     // Redirect to the report page
     window.location.href = '/report/'; // Replace 'report_page.html' with the actual URL of your report page
 });
-  
- 
 
 
     function toggleDropdown() {
@@ -382,12 +351,12 @@ document.getElementById('prevButton').addEventListener('click', function() {
     dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
 }
 
+
 // Function to hide the dropdown
 function hideDropdown() {
     var dropdownContent = document.getElementById("dropdownContent");
     dropdownContent.style.display = "none"; // Hide the dropdown content
 }
-
  </script>
 </body>
 </html>

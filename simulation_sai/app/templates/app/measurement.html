@@ -606,52 +606,88 @@ input[type=checkbox] {
     background: green;
 }
 
-
-@keyframes walkInBox {
-    0% { left: -200px; }
-    100% { left: 20px; }
-}
-@keyframes fadeInBox {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-@keyframes pulse {
-    0% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
-    50% { box-shadow: 0 0 40px rgba(255,0,0,1); }
-    100% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
-}
-
-#plc-notification {
+.notify-popup {
     position: fixed;
-    width: 95vw;
-    height: 80vh;
-    text-align: center;
-    top: 50%;
+    top: 30%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    background: red;
-    color: white;
-    font-size: 5vw; /* reduced font size */
-    font-weight: bold;
-    padding: 30px 50px;
+    height: 20%;
+    width: 70%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+    border: 2px solid black;
+    padding: 20px;
     border-radius: 15px;
-    z-index: 9999;
+    box-shadow: 0 0 25px rgba(255,0,0,0.5);
+    z-index: 10000;
+    text-align: center;
     opacity: 0;
-    overflow: hidden; /* keep human inside box */
-    display: none; /* Hides completely by default */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    transition: all 0.6s ease-in-out;
+    animation: glideIn 0.6s ease-out;
+}
+
+/* Input style */
+.notify-input {
+    width: 100%;
+    height: 20%;
+    margin-top: 5%;
+    font-size: 3vh;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: white;
+    text-shadow: 0 0 50px yellow, 0 0 40px orange;
+}
+
+/* Button style */
+.notify-btn {
+    padding: 10px 25px;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: black;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect for button */
+.notify-btn:hover {
+    background: white;
+    color: black;
+    transform: scale(1.5);
+    box-shadow: 0 0 15px yellow, 0 0 30px red;
+}
+
+/* Glide in animation */
+@keyframes glideIn {
+    from {
+        top: -50%;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+    to {
+        top: 30%;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Glow color shifting effect */
+@keyframes glowShift {
+    0% { box-shadow: 0 0 20px red, 0 0 40px orange; }
+    50% { box-shadow: 0 0 25px yellow, 0 0 50px red; }
+    100% { box-shadow: 0 0 20px orange, 0 0 40px red; }
+}
+
+.notify-popup.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: glideIn 0.6s ease-out, glowShift 2s infinite alternate;
 }
 
 
-#human-inside {
-    position: absolute;
-    bottom: 5px;
-    left: -200px; /* start hidden to left */
-    width: 250px; /* increased size */
-}
 
 </style>
 
@@ -708,7 +744,7 @@ input[type=checkbox] {
                     <span class="reset-symbol">&#8634;</span>
                 </button>
                 
-                <button class="arrow-button"  onclick="redirectToMeasurebox()">
+                <button class="arrow-button"  onclick="deactivateAndRedirect()">
                     <div class="arrow-icon">
                         <div class="arrow-tail"> BACK </div>
                     </div> 
@@ -741,6 +777,19 @@ input[type=checkbox] {
 
     <div class="table-container">
         <div class="box-2" id="box2" style="overflow-y: auto;">
+
+            <div id="job-absent-msg" style="
+        display: none;
+        width: 80%;
+        height: 15%;
+        margin: 0 auto 20px auto;  /* center horizontally and add bottom margin */
+        font-size: 7vh; 
+        font-weight: bold; 
+        background-color: red;
+        color: white; 
+        text-align: center;">
+        JOB NOT PRESENT
+    </div>
     
             <table border="1" style="width: 100%;" id="my-table">
               <thead>
@@ -808,7 +857,7 @@ input[type=checkbox] {
         <div id="com3-light" class="plc-light"></div>
     </div>
 </div>
-<div><button type="button" class="btn_outline" id="master-btn">Master<br>[F1]</button></div>
+<div><button type="button" class="btn_outline" id="master-btn" onclick="deactivateAndRedirectmeasure()">Master<br>[F1]</button></div>
 <div><button type="button" class="btn_outline" id="start-btn"> Start<br>[F4]</button></div>
 <div><button type="button" class="btn_outline" id="stop-btn">Stop<br>[F5]</button></div>
 <div><button type="button" class="btn_outline" id="save-btn" disabled style="filter: blur(2px);"> Save</button></div>
@@ -990,12 +1039,52 @@ input[type=checkbox] {
 </div>
 
 
-    <div id="plc-notification">
+    <!-- <div id="plc-notification">
     <img id="human-inside" src="/static/images/air.png" alt="Human Writer">
-    <div id="plc-message"></div>
+    <div id="plc-message"></div> -->
+
+
+
+
+
+
+</div>
+
+
+<div id="server-notify-box" 
+     style="display:none;" 
+     class="notify-popup">
+    
+    <input type="text" id="server-notify-input" 
+           class="notify-input" readonly>
+    <br><br>
+    <button onclick="closeServerNotify()" class="notify-btn">OK</button>
 </div>
 
 <script>
+
+
+function showServerNotify(message) {
+    let box = document.getElementById("server-notify-box");
+    let input = document.getElementById("server-notify-input");
+    
+    input.value = message;
+    box.style.display = "block";
+    
+    // Add active class for animation
+    setTimeout(() => {
+        box.classList.add("active");
+    }, 50);
+}
+
+function closeServerNotify() {
+    let box = document.getElementById("server-notify-box");
+    box.classList.remove("active");
+    setTimeout(() => {
+        box.style.display = "none";
+    }, 600);
+}
+
 
 
 function showNotification_plc(message) {
@@ -1174,10 +1263,51 @@ function redirectToMasterPage() {
     }
     document.addEventListener('keydown', redirectToMasterPage);
 
-document.getElementById('master-btn').addEventListener('click', function() {
-        window.location.href = '/master/'; // Replace '/master' with the actual URL of the master page
-    });
 
+  function deactivateAndRedirectmeasure() {
+    fetch('/deactivate_punch/', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({})
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Punch deactivated:", data);
+        // Redirect only after successful deactivation
+        window.location.href = '/master/';
+    })
+    .catch(err => {
+        console.error("Error deactivating punch:", err);
+        // Optional: still redirect even if deactivation failed
+        alert('somethign is wrong ')
+    });
+}
+
+
+function deactivateAndRedirect() {
+    fetch('/deactivate_punch/', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({})
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Punch deactivated:", data);
+        // Redirect only after successful deactivation
+        window.location.href = '/measurebox/';
+    })
+    .catch(err => {
+        console.error("Error deactivating punch:", err);
+        // Optional: still redirect even if deactivation failed
+        window.location.href = '/measurebox/';
+    });
+}
 
 document.addEventListener('keydown', function(event) {
     console.log("Key pressed:", event.key);
@@ -1357,9 +1487,21 @@ if (parameterAttributes.length > 0 && attributeStatuses.length > 0) {
             success: function(response){
                 console.log("Data saved successfully: ", response);
                 showCustomAlert('DATA SAVED' ,'success');
-                setTimeout(() =>{ 
-                location.reload();
-            },1000);
+            const punchTextarea = document.getElementById('punch_textarea');
+    const notificationContainer = document.getElementById('notification-container');
+
+    if(punchTextarea && notificationContainer) {
+        notificationContainer.style.display = 'block';
+        punchTextarea.style.display = 'block';
+
+        // Fill textarea with last punch value
+        // You can use #comp_srno value or store lastServerPunch in a variable
+        const lastPunchValue = document.getElementById('comp_srno').value || '';
+        punchTextarea.value = '';
+
+        // Focus the textarea
+        punchTextarea.focus();
+    }
             },
             error: function(xhr, status, error){
                 console.error("Error occurred while saving data: ", error);
@@ -1981,78 +2123,78 @@ function showCustomConfirmationModal() {
 
 
 
-document.getElementById("save-btn").addEventListener("click", function() {
-            function clearValues() {
-            var partStatusInput = document.getElementById("part_status");
-            var partStatus = partStatusInput.value;
-            var acceptInput = document.getElementById("accept");
-            var rejectInput = document.getElementById("reject");
-            var reworkInput = document.getElementById("rework");
-            var attributeStatuses = document.querySelectorAll("[id^='attributeStatus']"); // Select all attribute status elements
+// document.getElementById("save-btn").addEventListener("click", function() {
+//             function clearValues() {
+//             var partStatusInput = document.getElementById("part_status");
+//             var partStatus = partStatusInput.value;
+//             var acceptInput = document.getElementById("accept");
+//             var rejectInput = document.getElementById("reject");
+//             var reworkInput = document.getElementById("rework");
+//             var attributeStatuses = document.querySelectorAll("[id^='attributeStatus']"); // Select all attribute status elements
            
            
 
 
-            if (partStatus === "ACCEPT") {
-                acceptInput.value = parseInt(acceptInput.value) + 1;
-            } else if (partStatus === "REJECT") {
-                rejectInput.value = parseInt(rejectInput.value) + 1;
-            } else if (partStatus === "REWORK") {
-                reworkInput.value = parseInt(reworkInput.value) + 1;
-            }
-            var statusCells = document.querySelectorAll('.status_cell');
-            statusCells.forEach(function(statusCell) {
-                statusCell.textContent = ""; // Clear text content
-                statusCell.style.backgroundColor = ""; // Clear text content
-            });
+//             if (partStatus === "ACCEPT") {
+//                 acceptInput.value = parseInt(acceptInput.value) + 1;
+//             } else if (partStatus === "REJECT") {
+//                 rejectInput.value = parseInt(rejectInput.value) + 1;
+//             } else if (partStatus === "REWORK") {
+//                 reworkInput.value = parseInt(reworkInput.value) + 1;
+//             }
+//             var statusCells = document.querySelectorAll('.status_cell');
+//             statusCells.forEach(function(statusCell) {
+//                 statusCell.textContent = ""; // Clear text content
+//                 statusCell.style.backgroundColor = ""; // Clear text content
+//             });
 
-            var readingInputs = document.querySelectorAll('.readingInputs');
-            readingInputs.forEach(function(readingInput) {
-                readingInput.value = ""; // Clear the value of the input
-                readingInput.color = "";
-            });
+//             var readingInputs = document.querySelectorAll('.readingInputs');
+//             readingInputs.forEach(function(readingInput) {
+//                 readingInput.value = ""; // Clear the value of the input
+//                 readingInput.color = "";
+//             });
 
-            partStatusInput.value = "";
-            partStatusInput.style.backgroundColor = "";
+//             partStatusInput.value = "";
+//             partStatusInput.style.backgroundColor = "";
 
             
-             // Clear attribute statuses
-        attributeStatuses.forEach(function(attributeStatus) {
-            attributeStatus.value = ""; // Clear input value
-            attributeStatus.style.backgroundColor = ""; // Clear background color
-        });
+//              // Clear attribute statuses
+//         attributeStatuses.forEach(function(attributeStatus) {
+//             attributeStatus.value = ""; // Clear input value
+//             attributeStatus.style.backgroundColor = ""; // Clear background color
+//         });
 
-            var compSrNo = document.getElementById("comp_srno");
-            compSrNo.value = "";
+//             var compSrNo = document.getElementById("comp_srno");
+//             compSrNo.value = "";
 
-            var punchTextarea = document.getElementById("punch_textarea");
-            punchTextarea.value = "";
+//             var punchTextarea = document.getElementById("punch_textarea");
+//             punchTextarea.value = "";
 
-            var indicatorBoxes = document.querySelectorAll('.indicator-box, .indicator-box1');
-            indicatorBoxes.forEach(function(indicatorBox) {
-                indicatorBox.style.background = "";
-            });
-        }
+//             var indicatorBoxes = document.querySelectorAll('.indicator-box, .indicator-box1');
+//             indicatorBoxes.forEach(function(indicatorBox) {
+//                 indicatorBox.style.background = "";
+//             });
+//         }
 
-        setTimeout(clearValues, 1000); // Execute clearValues function after 1 second (1000 milliseconds)
+//         setTimeout(clearValues, 1000); // Execute clearValues function after 1 second (1000 milliseconds)
          
-        var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
-        if (hide === 'True') {
-            document.getElementById('notification-container').style.display = 'block';
-            document.getElementById('punch_textarea').style.display = 'block';
-            document.getElementById('punch_textarea').focus();
-            buttons.forEach(function(button) {
-                button.disabled = true;
+//         var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
+//         if (hide === 'True') {
+//             document.getElementById('notification-container').style.display = 'block';
+//             document.getElementById('punch_textarea').style.display = 'block';
+//             document.getElementById('punch_textarea').focus();
+//             buttons.forEach(function(button) {
+//                 button.disabled = true;
             
-            });
-        }
-        currentStep = 1;
+//             });
+//         }
+//         currentStep = 1;
 
-        const saveButton = document.getElementById("save-btn");
-            saveButton.disabled = true;        // Enable the button
-            saveButton.style.filter = "blur(2px)";   // Remove the blur effect
+//         const saveButton = document.getElementById("save-btn");
+//             saveButton.disabled = true;        // Enable the button
+//             saveButton.style.filter = "blur(2px)";   // Remove the blur effect
         
-        });
+//         });
 
 
    
@@ -2219,6 +2361,10 @@ function hideNotificationAndHuman() {
 }
 
 
+
+blockDismissed = false;
+
+
 function fetchActiveCoils() {
     fetch("/get_plc_status/")
         .then(response => response.json())
@@ -2236,10 +2382,39 @@ function fetchActiveCoils() {
 
             const signalLight = document.getElementById("coil73-light");
 
-            if (activeCoils.includes(113)) {
-                showNotificationWithHuman();
-            } else {
-                hideNotificationAndHuman();
+            // if (activeCoils.includes(113)) {
+            //     showNotificationWithHuman();
+            // } else {
+            //     hideNotificationAndHuman();
+            // }
+
+            // const measureBtn = document.getElementById("master-btn");
+            // if (measureBtn) {
+            //     if (activeCoils.includes(80)) {
+            //         measureBtn.disabled = false;
+            //         measureBtn.style.opacity = "1"; // optional visual feedback
+            //         console.log("⛔ Measurement disabled (coil 80 active)");
+            //         window.location.href = "/master/"
+            //     } else {
+            //         measureBtn.disabled = true;
+            //         measureBtn.style.opacity = "0.5"; 
+            //     }
+            // }
+
+            const measureBtn = document.getElementById("master-btn");
+            if (measureBtn) {
+                if (activeCoils.includes(80)) {
+                    measureBtn.disabled = false;            // Enable the button
+                    measureBtn.style.opacity = "1";         // Optional visual feedback
+                    console.log("⛔ Measurement disabled (coil 114 active) — Master button enabled");
+
+                    // Automatically click the button
+                    measureBtn.click();
+                } else {
+                    measureBtn.disabled = true;             // Disable the button
+                    measureBtn.style.opacity = "0.5"; 
+                    console.log("Master button disabled — coil 114 not active");
+                }
             }
 
             if (activeCoils.includes(73)) {
@@ -2304,6 +2479,19 @@ function fetchActiveCoils() {
                 console.log("u");
             } else {
                 airLow.classList.remove("on");
+            }
+
+
+
+            const jobAbsentMsg = document.getElementById('job-absent-msg');
+
+
+
+            // Hide jobAbsentMsg if 87 is active, regardless of blockDismissed
+            if (activeCoils.includes(118) || activeCoils.includes(98)) {
+                jobAbsentMsg.style.display = 'none';
+            } else {
+                jobAbsentMsg.style.display = 'block';
             }
 
 
@@ -2375,11 +2563,11 @@ function checkCoilsAndHandleStep1() {
                 if (startBtn) startBtn.click();
 
                 startLight.classList.add("on");
-                console.log("u");
+                // console.log("u");
             } else {
                 startLight.classList.remove("on");
                 if (!step1Notified) {
-                    showNotification_plc("❌ STEP 1 NOT READY");
+                    // showNotification_plc("❌ STEP 1 NOT READY");
                     step1Notified = true;
                 }
             }
@@ -2391,7 +2579,7 @@ function checkCoilsAndHandleStep1() {
                 if (stopBtn) stopBtn.click();
 
                 stopLight.classList.add("on");
-                console.log("u");
+                // console.log("u");
             } else {
                 stopLight.classList.remove("on");
             }
@@ -2431,7 +2619,7 @@ function checkCoilsAndHandleStep2() {
 
             } else {
                 if (!step2Notified) {
-                    showNotification_plc("❌ Step 2: Coil 65 not active");
+                    // showNotification_plc("❌ Step 2: Coil 65 not active");
                     step2Notified = true;
                 }
                 // Turn OFF Step 2 Start & Stop lights when coil 65 is not active
@@ -2465,28 +2653,28 @@ function checkCoilsAndHandleStep3() {
                 if (startBtn) startBtn.click();
                 step3StartLight.classList.add("on");
 
-                console.log("n");
+                // console.log("n");
 
                 if (activeCoils.includes(115)) {
                     const stopBtn = document.getElementById("stop-btn");
                     if (stopBtn) stopBtn.click();
 
                     step3StopLight.classList.add("on");
-                    console.log("n");
+                    // console.log("n");
 
                 }
 
                 if (activeCoils.includes(116)) {
                     
                     step3StopLight.classList.add("on");
-                    console.log("n");
+                    // console.log("n");
 
                 }
 
                 
 
             } else if (!step3Notified) {
-                showNotification_plc("❌ Step 3: Coil 66 not active");
+                // showNotification_plc("❌ Step 3: Coil 66 not active");
                 step3Notified = true;
             }
         });
@@ -2576,306 +2764,238 @@ function getCombinedTextareaParts(probeNumber) {
 
 
 
-function displaySerialData(parameterNameValues, probe_value, e_value, d_value, o1_value, readingsInput, measurementMode,digitsValues, step_no, lsl, 
-usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, parameter_name_single, b_value, b1_value) {
-
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",digitsValues);
-
-if (!coilCheckIntervalStarted) {
-    startCoilCheckForStep(step_no);
-} else {
-    console.warn("⚠️ Coil check already running. Continuing displaySerialData logic for step:", step_no);
-}
 
 
+function displaySerialData(parameterNameValues, probe_value, e_value, d_value, o1_value, readingsInput, measurementMode, digitsValues, step_no, lsl,
+    usl, ltl, utl, indicatorBox, indicatorBox1, statusCell, parameterFactorValues, parameter_name_single, b_value, b1_value) {
 
+    console.log("digitsValues:", digitsValues);
 
-            
-    console.log("parameterNameValues:", parameterNameValues);
-    console.log("parameter_name_single:", parameter_name_single);
-    console.log("parameterFactorValues:", parameterFactorValues);
-    console.log("step_no:", step_no);
-    console.log("indicatorBox, indicatorBox1:", indicatorBox, indicatorBox1, readingsInput);
-    console.log("your probe_vau is thissssssssssssssssssssssssssssssssssss:",probe_value);
+    if (!coilCheckIntervalStarted) {
+        startCoilCheckForStep(step_no);
+    } else {
+        console.warn("⚠️ Coil check already running. Continuing displaySerialData logic for step:", step_no);
+    }
 
     // Retrieve textarea ID based on probeValue
-    const { total: newSerialData, parts: probeParts } = getCombinedTextareaParts(probe_value);
+    const { parts: probeParts } = getCombinedTextareaParts(probe_value);
 
+    // Ensure persistent storage across ticks
+    if (!window.measurementMap) window.measurementMap = {};
+    if (!window.paramOutputs) window.paramOutputs = {};
 
-        // Function to calculate and update the displayOutput
-        function updateDisplayOutput() {
-            const { total: newSerialData } = getCombinedTextareaParts(probe_value);
+    let continuousUpdateInterval = null;
 
+    function resetStore() {
+        window.measurementMap[readingsInput.id] = {
+            max: -Infinity,
+            min: Infinity,
+            sum: 0,
+            count: 0,
+            firstUpdateShown: false,
+            maxSerialData: null,
+            minSerialData: null
+        };
+    }
 
-            // Base calculation for displayOutput
-            let displayOutput = e_value + (newSerialData * d_value + o1_value);
+    // Function to calculate and update the displayOutput
+    function updateDisplayOutput() {
+        const { total: newSerialData } = getCombinedTextareaParts(probe_value);
 
-            if (isNaN(displayOutput)) {
-                displayOutput = 0;
+        // === 1. Base calculation for displayOutput ===
+        let displayOutput = e_value + (newSerialData * d_value + o1_value);
+        if (isNaN(displayOutput)) displayOutput = 0;
+
+        // 2️⃣ Alternative formula if matched
+        let matchFound = Array.isArray(parameter_name_single)
+            ? parameter_name_single.some(name => String(name).trim().toLowerCase() === String(parameterNameValues).trim().toLowerCase())
+            : String(parameter_name_single).trim().toLowerCase() === String(parameterNameValues).trim().toLowerCase();
+
+        if (matchFound) {
+            displayOutput = (newSerialData - b1_value) * d_value + e_value + b_value;
+        }
+
+        // === 4. Only update readingsInput when active ===
+        if (continuousUpdateInterval && step_no === currentStep) {
+            const inputId = readingsInput.id;
+
+            if (!window.measurementMap[inputId]) resetStore();
+            const store = window.measurementMap[inputId];
+
+            if (["TIR", "DTM"].includes(measurementMode) && !store.firstUpdateShown) {
+                readingsInput.value = (0).toFixed(digitsValues);
+                if (displayOutput > store.max) store.max = displayOutput;
+                if (displayOutput < store.min) store.min = displayOutput;
+                store.sum += displayOutput;
+                store.count++;
+                store.firstUpdateShown = true;
+                return;
             }
 
-            // Modify displayOutput based on parameterFactorValues
-            for (let i = 0; i < parameterFactorValues.length; i++) {
-                const factor = parameterFactorValues[i]; // {parameter_name, method, value}
-                const parameterName = factor.parameter_name;
-                const method = factor.method; // '+' or '-'
-                const value = parseFloat(factor.value);
+            if (displayOutput > store.max) {
+                store.max = displayOutput;
+                store.maxSerialData = newSerialData;
+            }
+            if (displayOutput < store.min) {
+                store.min = displayOutput;
+                store.minSerialData = newSerialData;
+            }
 
-                if (parameterName === parameterNameValues) {
-                    if (method === '+') {
-                        displayOutput += value;
-                    } else if (method === '-') {
-                        displayOutput -= value;
-                    }
+            store.sum += displayOutput;
+            store.count++;
+
+            readingsInput.value = displayOutput.toFixed(digitsValues);
+
+            if (measurementMode === "MAX") {
+                readingsInput.value = store.max.toFixed(digitsValues);
+                displayOutput = store.max;
+            } else if (measurementMode === "MIN") {
+                readingsInput.value = store.min.toFixed(digitsValues);
+                displayOutput = store.min;
+            } else if (measurementMode === "CUR") {
+                readingsInput.value = displayOutput.toFixed(digitsValues);
+            } else if (measurementMode === "AVR") {
+                const avr = (store.max + store.min) / 2;
+                if (!isNaN(avr)) {
+                    readingsInput.value = avr.toFixed(digitsValues);
+                    displayOutput = avr;
+                }
+            } else if (measurementMode === "TIR") {
+                const tir = (store.max - store.min) / 2;
+                if (!isNaN(tir)) {
+                    readingsInput.value = tir.toFixed(digitsValues);
+                    displayOutput = tir;
                 }
             }
 
-            // Handle case where parameter_name_single is an array
-            let matchFound = false;
-            if (Array.isArray(parameter_name_single)) {
-                matchFound = parameter_name_single.some(
-                    (name) => String(name).trim().toLowerCase() === String(parameterNameValues).trim().toLowerCase()
-                );
-            } else {
-                matchFound =
-                    String(parameter_name_single).trim().toLowerCase() ===
-                    String(parameterNameValues).trim().toLowerCase();
+            // 4️⃣ **Apply parameter factors at the very end**
+            parameterFactorValues.forEach(factor => {
+                const factorParam = String(factor.parameter_name).trim().toLowerCase();
+                const method = factor.method;
+                const value = parseFloat(factor.value);
+                if (factorParam === String(parameterNameValues).trim().toLowerCase() && !isNaN(value)) {
+                    displayOutput = method === '+' ? displayOutput + value : displayOutput - value;
+                }
+            });
+
+            // 5️⃣ Update readingsInput
+            readingsInput.value = displayOutput.toFixed(digitsValues);
+            window.paramOutputs[parameterNameValues] = displayOutput;
+
+            // ✅ store this row’s latest displayOutput
+            {
+                const mIdx = /readings-input-(\d+)/.exec(readingsInput.id);
+                if (mIdx) {
+                    const thisIdx = parseInt(mIdx[1], 10);
+                    window.paramOutputs[thisIdx] = displayOutput;
+                }
             }
 
-            // Update displayOutput based on match
-            if (matchFound) {
-                console.log("Matched parameterNameValues with parameter_name_single. Using alternative formula.");
-                const displayOutput1 = (newSerialData - b1_value) * d_value;
-                displayOutput = displayOutput1 + e_value + b_value;
+            // === indicator logic ===
+            var totalLength, coloredPortionLength, coloredPortion, uncoloredPortion;
+            var coloredWidth, defaultWidth, color;
+
+            if (displayOutput > e_value) {
+                totalLength = usl - e_value;
+                coloredPortionLength = displayOutput - e_value;
+            } else if (displayOutput < e_value) {
+                totalLength = e_value - lsl;
+                coloredPortionLength = e_value - displayOutput;
             } else {
-                console.log("No match. Keeping original formula.");
+                totalLength = usl - lsl || 1;
+                coloredPortionLength = 0;
             }
 
-            // console.log("Updated displayOutput:", displayOutput);
+            coloredPortion = totalLength ? (coloredPortionLength / totalLength) : 0;
+            uncoloredPortion = 1 - coloredPortion;
+            coloredWidth = coloredPortion * 100;
+            defaultWidth = uncoloredPortion * 100;
 
+            if (displayOutput >= lsl && displayOutput <= usl) {
+                color = '#00ff00';
+            } else if ((displayOutput > usl && displayOutput <= utl) || (displayOutput >= ltl && displayOutput < lsl)) {
+                color = 'yellow';
+            } else {
+                color = 'red';
+            }
 
-            let avrValuesMap = {};
-            let dtmValuesMap = {};
+            readingsInput.style.backgroundColor = 'black';
+            readingsInput.style.fontWeight = 'bold';
+            readingsInput.style.fontSize = '22px';
+            readingsInput.style.color = color;
 
-            // Update the readings input only when the continuous update is active and step_no matches
-            if (continuousUpdateInterval && step_no === currentStep) {
-             
-                // Update the readings input based on measurement mode
-                if (measurementMode === "MAX" || measurementMode === "MIN" || measurementMode === "CUR" || measurementMode === "TIR" || measurementMode === "AVR" || measurementMode === "DTM") {
-                    // Update only if the new value is greater than or less than the current value
-                    const inputId = readingsInput.id;
-                    var currentValue = parseFloat(readingsInput.value);
-                    if (isNaN(currentValue) || (measurementMode === "MAX" && displayOutput > currentValue) ||
-                        (measurementMode === "MIN" && displayOutput < currentValue) ||
-                        (measurementMode === "CUR" || measurementMode === "TIR" || measurementMode === "AVR"|| measurementMode === "DTM")) {
-                        readingsInput.value = displayOutput.toFixed(digitsValues);
-                         if (measurementMode === "AVR") {
-                            if (!avrValuesMap[inputId]) {
-                                avrValuesMap[inputId] = { max: displayOutput, min: displayOutput };
-                            }
-
-                            if (displayOutput > avrValuesMap[inputId].max) {
-                                avrValuesMap[inputId].max = displayOutput;
-                            }
-                            if (displayOutput < avrValuesMap[inputId].min) {
-                                avrValuesMap[inputId].min = displayOutput;
-                            }
-
-                            const max = avrValuesMap[inputId].max;
-                            const min = avrValuesMap[inputId].min;
-                            if (max !== min) {
-                                const avr = (max + min) / 2;
-                                if (!isNaN(avr)) {
-                                    readingsInput.value = avr.toFixed(digitsValues);
-                                    displayOutput = avr;
-                                }
-                            }
-                        }
-
-                        // === DTM Mode Logic ===
-                        if (measurementMode === "DTM") {
-                            if (!dtmValuesMap[inputId]) {
-                                dtmValuesMap[inputId] = { max: displayOutput, min: displayOutput };
-                            }
-
-                            if (displayOutput > dtmValuesMap[inputId].max) {
-                                dtmValuesMap[inputId].max = displayOutput;
-                            }
-                            if (displayOutput < dtmValuesMap[inputId].min) {
-                                dtmValuesMap[inputId].min = displayOutput;
-                            }
-
-                            const max = dtmValuesMap[inputId].max;
-                            const min = dtmValuesMap[inputId].min;
-                            if (max !== min) {
-                                const dtm = (max + min) / 2;
-                                if (!isNaN(dtm)) {
-                                    readingsInput.value = dtm.toFixed(digitsValues);
-                                    displayOutput = dtm;
-                                }
-                            }
-                        }
-
-                        if (measurementMode === "TIR") {
-                            readingsInput.value = tirValue.toFixed(digitsValues);
-                        }
-
-                        // Calculate total length and colored portion length
-                        var totalLength, coloredPortionLength, coloredPortion, uncoloredPortion;
-                        var coloredWidth, defaultWidth, color;
-
-                        if (displayOutput > e_value) {
-                            totalLength = usl - e_value;
-                            coloredPortionLength = displayOutput - e_value;
-                        } else if (displayOutput < e_value){
-                            totalLength = e_value - lsl;
-                            coloredPortionLength = e_value - displayOutput;
-                        }
-
-                        coloredPortion = coloredPortionLength / totalLength;
-                        uncoloredPortion = 1 - coloredPortion;
-                        coloredWidth = coloredPortion * 100;
-                        defaultWidth = uncoloredPortion * 100;
-
-                        // Set background color based on measurement mode and displayOutput ranges
-                        if ((measurementMode === "MAX" && displayOutput >= lsl && displayOutput <= usl) ||
-                            (measurementMode === "MIN" && displayOutput >= lsl && displayOutput <= usl) ||
-                            (measurementMode === "CUR" && displayOutput >= lsl && displayOutput <= usl) ||
-                            (measurementMode === "AVR" && displayOutput >= lsl && displayOutput <= usl) ||
-                            (measurementMode === "DTM" && displayOutput >= lsl && displayOutput <= usl) ||
-                            (measurementMode === "TIR" && tirValue >= lsl && tirValue <= usl)) {
-                            color = '#00ff00'; // Green
-                            if (color === '#00ff00') {
-                                readingsInput.style.backgroundColor = 'black';
-                                readingsInput.style.fontWeight = 'bold';
-                                readingsInput.style.fontSize = '22px'; // Adjust the size as needed
-
-                            } 
-                        } else if ((measurementMode === "MAX" &&((displayOutput > usl && displayOutput <= utl) || 
-                                                                    (displayOutput >= ltl && displayOutput < lsl))) || 
-                                    (measurementMode === "MIN" &&((displayOutput > usl && displayOutput <= utl) || 
-                                                                    (displayOutput >= ltl && displayOutput < lsl))) || 
-                                    (measurementMode === "CUR" && ((displayOutput > usl && displayOutput <= utl) || 
-                                                                    (displayOutput >= ltl && displayOutput < lsl))) ||
-                                    (measurementMode === "AVR" && ((displayOutput > usl && displayOutput <= utl) || 
-                                                                    (displayOutput >= ltl && displayOutput < lsl))) ||
-                                    (measurementMode === "DTM" && ((displayOutput > usl && displayOutput <= utl) || 
-                                                                    (displayOutput >= ltl && displayOutput < lsl))) ||                                
-                                    (measurementMode === "TIR" && ((tirValue > usl && tirValue <= utl) || 
-                                                                  (tirValue >= ltl && tirValue < lsl)))) 
-                                    {
-                            color = 'yellow';
-                            if (color === 'yellow') {
-                                readingsInput.style.backgroundColor = 'black';
-                                readingsInput.style.fontWeight = 'bold';
-                                readingsInput.style.fontSize = '22px'; // Adjust the size as needed
-                            }
-                        } else if ((measurementMode === "MAX" && displayOutput > utl || displayOutput <ltl) ||
-                            (measurementMode === "MIN" && displayOutput > utl || displayOutput <ltl) ||
-                            (measurementMode === "CUR" && displayOutput > utl || displayOutput <ltl) ||
-                            (measurementMode === "AVR" && displayOutput > utl || displayOutput <ltl) ||
-                            (measurementMode === "DTM" && displayOutput > utl || displayOutput <ltl) ||
-                            (measurementMode === "TIR" && tirValue > utl || tirValue <ltl)) {
-                            color = 'red'; // Green
-                            if (color === 'red') {
-                                readingsInput.style.backgroundColor = 'black';
-                                readingsInput.style.fontWeight = 'bold';
-                                readingsInput.style.fontSize = '22px'; // Adjust the size as needed
-                            }
-                            
-                        }
-                        
-                        readingsInput.style.color = color;
-                        // readingsInput.style.textShadow = (color === 'red') ? '0 0 2px white' : '0 0 2px black';
-
-
-
-document.getElementById('stop-btn').addEventListener('click', function() {
-    var indices = [];
-    // Assuming step_no_values and currentStep are defined somewhere
-    for (var i = 0; i < step_no_values.length; i++) {
-        if (step_no_values[i] === currentStep) {
-            indices.push(i);
+            if (displayOutput > e_value) {
+                var indicatorBoxElement = document.getElementById(indicatorBox.id);
+                var indicatorBox1Element = document.getElementById(indicatorBox1.id);
+                indicatorBoxElement.style.background = 'white';
+                indicatorBox1Element.style.background = `linear-gradient(to right, ${color} ${coloredWidth}%, white ${coloredWidth}% ${defaultWidth}%, white 100%)`;
+            } else if (displayOutput < e_value) {
+                var indicatorBoxElement = document.getElementById(indicatorBox.id);
+                var indicatorBox1Element = document.getElementById(indicatorBox1.id);
+                indicatorBox1Element.style.background = 'white';
+                indicatorBoxElement.style.background = `linear-gradient(to left, ${color} ${coloredWidth}%, white ${coloredWidth}% ${defaultWidth}%, white 100%)`;
+            }
         }
     }
 
-    indices.forEach(function(index) {
-        var readingsInput = document.getElementById('readings-input-' + index);
-        var color = readingsInput.style.color;
-        var statusCell = document.getElementById('status_cell-' + index); // Assuming 'status-cell' is the class of your status cells
-        statusCell.style.backgroundColor = color;
-        if (color === "rgb(0, 255, 0)" || color === "#00ff00") { // Different browsers might return color in different formats
-            statusCell.textContent = "ACCEPT";
-            statusCell.style.fontWeight = "bold";
-        } else if (color === "red" || color === "#ff0000") {
-            statusCell.textContent = "REJECT";
-            statusCell.style.fontWeight = "bold";
-        } else if (color === "yellow" || color === "#ffff00") {
-            statusCell.textContent = "REWORK";
-            statusCell.style.fontWeight = "bold";
+    probeParts.forEach(({ id }) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', updateDisplayOutput);
         }
     });
-});
 
+    function startContinuousUpdate() {
+        resetStore();
+        if (continuousUpdateInterval) clearInterval(continuousUpdateInterval);
+        continuousUpdateInterval = setInterval(updateDisplayOutput, 100);
+    }
 
-
-
-
-
-if (displayOutput > e_value) {
-    var indicatorBoxElement = document.getElementById(indicatorBox.id);
-    var indicatorBox1Element = document.getElementById(indicatorBox1.id);
-    
-    // Set indicatorBoxElement to default color
-    indicatorBoxElement.style.background = 'white';
-
-    // Set indicatorBox1Element to colored gradient
-    indicatorBox1Element.style.background = `linear-gradient(to right, ${color} ${coloredWidth}%, white ${coloredWidth}% ${defaultWidth}%, white 100%)`;
-} else if (displayOutput < e_value) {
-    var indicatorBoxElement = document.getElementById(indicatorBox.id);
-    var indicatorBox1Element = document.getElementById(indicatorBox1.id);
-    
-    // Set indicatorBox1Element to default color
-    indicatorBox1Element.style.background = 'white';
-
-    // Set indicatorBoxElement to colored gradient
-    indicatorBoxElement.style.background = `linear-gradient(to left, ${color} ${coloredWidth}%, white ${coloredWidth}% ${defaultWidth}%, white 100%)`;
-}
-
-            }
+    function stopContinuousUpdate() {
+        if (continuousUpdateInterval) {
+            clearInterval(continuousUpdateInterval);
+            continuousUpdateInterval = null;
         }
     }
-}
 
-        probeParts.forEach(({ id }) => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('input', updateDisplayOutput);
+    document.getElementById('start-btn').addEventListener('click', startContinuousUpdate);
+    document.getElementById('stop-btn').addEventListener('click', stopContinuousUpdate);
+
+    document.getElementById('stop-btn').addEventListener('click', function () {
+        var indices = [];
+        for (var i = 0; i < step_no_values.length; i++) {
+            if (step_no_values[i] === currentStep) {
+                indices.push(i);
+            }
+        }
+        indices.forEach(function (index) {
+            var readingsInputEl = document.getElementById('readings-input-' + index);
+            var color = readingsInputEl.style.color;
+            var statusCellEl = document.getElementById('status_cell-' + index);
+            statusCellEl.style.backgroundColor = color;
+            if (color === "rgb(0, 255, 0)" || color === "#00ff00") {
+                statusCellEl.textContent = "ACCEPT";
+            } else if (color === "red" || color === "#ff0000") {
+                statusCellEl.textContent = "REJECT";
+            } else if (color === "yellow" || color === "#ffff00") {
+                statusCellEl.textContent = "REWORK";
+            }
+            statusCellEl.style.fontWeight = "bold";
+
+            // ✅ log final max/min newSerialData
+            if (readingsInputEl.id === "readings-input-2" || readingsInputEl.id === "readings-input-4") {
+                const store = window.measurementMap[readingsInputEl.id];
+                if (store) {
+                    console.log(`Probe ${readingsInputEl.id} FINAL MAX newSerialData:`, store.maxSerialData);
+                    console.log(`Probe ${readingsInputEl.id} FINAL MIN newSerialData:`, store.minSerialData);
+                }
             }
         });
+    });
 
-
-        // Function to start continuous update
-        function startContinuousUpdate() {
-            continuousUpdateInterval = setInterval(updateDisplayOutput, 100); // Update every half a second
-        }
-
-        // Function to stop continuous update
-        function stopContinuousUpdate() {
-            clearInterval(continuousUpdateInterval);
-            continuousUpdateInterval = null; // Reset continuousUpdateInterval
-        }
-
-        // Event listener for start-btn
-        document.getElementById('start-btn').addEventListener('click', startContinuousUpdate);
-
-        // Event listener for stop-btn
-        document.getElementById('stop-btn').addEventListener('click', stopContinuousUpdate);
-
-        // Call the function once to initially display the value
-        updateDisplayOutput();
-    
+    updateDisplayOutput();
 }
+
 
 function showNotification(message) {
     // Get the input element
@@ -2942,10 +3062,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+// document.addEventListener('DOMContentLoaded', function() {
+//     document.getElementById('punch_textarea').focus();
+// });
+
 function handleEnterKeyPress(event) {
-    var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
+    var buttons = document.querySelectorAll('#start-btn, #stop-btn, #save-btn, #back-btn');
+
+   
 
     if (event.key === 'Enter') {
+
+        blockDismissed = true;
         var punchValue = $('#punch_textarea').val();
         var partModelValue = $('#partModel').val();
 
@@ -3022,25 +3150,140 @@ function handleEnterKeyPress(event) {
             }
         });
 
-    }
-}
+
+        $.ajax({
+            type: 'POST',
+            url: '/clearmeasurement/',  // Replace with your actual backend endpoint
+            headers: {
+                'X-CSRFToken': csrftoken,  // Include CSRF token in headers
+            },
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response) {
+
+                if (response.status === 'success') {
+                    $('#comp_srno').val(response.punch_value);  // set received punch value in input
 
 
-// Function to get CSRF cookie value
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+                }
+            },
+            error: function(error) {
+                alert('An error occurred while saving settings.');
+                console.log(error);
             }
+        });
+
+
+ sendPcsignal("readysignal");
+        
+
+        function sendPcsignal(signal) {
+    // Send initial status
+    fetch('/post_pc_ready/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ signal: signal })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('✅ signal posted:', data);
+
+    })
+    .catch(err => console.error('❌ Failed to post status:', err));
         }
+        
+
     }
-    return cookieValue;
 }
+
+
+
+
+/** --- 2-step Enter cycle state --- **/
+const STEP_KEY = "punchStep";            // "idle" | "waitForSecondEnter"
+const STEP_IDLE = "idle";
+const STEP_WAIT = "waitForSecondEnter";
+
+let lastServerPunch = null;               // keep latest punch from server
+
+/** run on every load **/
+document.addEventListener('DOMContentLoaded', function () {
+  const punchTextarea = document.getElementById('punch_textarea');
+
+  // default state
+  if (!localStorage.getItem(STEP_KEY)) localStorage.setItem(STEP_KEY, STEP_IDLE);
+
+  const step = localStorage.getItem(STEP_KEY);
+
+  // After the refresh triggered by the first Enter:
+  // get punch from server, put it into textarea, then auto-press Enter ONCE.
+  if (step === STEP_WAIT) {
+    fetch('/get_active_punch/')
+      .then(res => res.json())
+      .then(data => {
+        console.log('🔁 reload → server punch:', data);
+        if (data.status === 'success' && data.is_active && data.punch_value) {
+          lastServerPunch = data.punch_value;
+          punchTextarea.value = data.punch_value;
+
+          // auto press Enter for step 2 (no refresh)
+          const enterEvent = new KeyboardEvent('keydown', {
+            key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true
+          });
+          punchTextarea.dispatchEvent(enterEvent);
+          console.log("✅ auto second Enter dispatched");
+        } else {
+          // nothing active → reset for next cycle
+          localStorage.setItem(STEP_KEY, STEP_IDLE);
+        }
+      })
+      .catch(err => {
+        console.error('get_active_punch failed:', err);
+        localStorage.setItem(STEP_KEY, STEP_IDLE);
+      });
+  }
+
+  // focus if visible
+  if (punchTextarea && punchTextarea.style.display !== "none") {
+    punchTextarea.focus();
+  }
+});
+
+/** Key handling for both steps (binds to your existing flow) **/
+document.getElementById('punch_textarea').addEventListener('keydown', function (event) {
+  if (event.key !== 'Enter') return;
+
+  const step = localStorage.getItem(STEP_KEY) || STEP_IDLE;
+
+  // Block duplicate ONLY on step 1 (user press)
+  if (step === STEP_IDLE && lastServerPunch && this.value === lastServerPunch) {
+    console.log("⛔ same as server value, blocking first Enter");
+    event.preventDefault();
+    return;
+  }
+
+  if (step === STEP_IDLE) {
+    // ---- STEP 1: user Enter → run your handler, then refresh once ----
+    event.preventDefault();
+    handleEnterKeyPress(event);                 // your existing function
+    localStorage.setItem(STEP_KEY, STEP_WAIT);  // tell next load to auto-enter
+    setTimeout(() => window.location.reload(), 50);
+    return;
+  }
+
+  if (step === STEP_WAIT) {
+    // ---- STEP 2: auto Enter after reload → run handler, NO refresh ----
+    event.preventDefault();
+    handleEnterKeyPress(event);                 // your existing function
+    localStorage.setItem(STEP_KEY, STEP_IDLE);  // reset for next cycle
+    lastServerPunch = null;                     // clear duplicate guard
+    return;
+  }
+});
+
+
+
 
 function punchOverwrite() {
     // Hide the punch_overwrite_container
@@ -3088,6 +3331,9 @@ function punchOverwriteLogin() {
 
 
                     location.reload(); 
+
+
+                    
                 } else {
                     alert('FAILED TO OVERWRITE');
                 }
@@ -3110,6 +3356,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedPunchValue) {
         // Set the punch value in the textarea
         document.getElementById('punch_textarea').value = savedPunchValue;
+
+        setTimeout(function() {
+            handleEnterKeyPress({ key: 'Enter' });
+        }, 1000);
         
         // Clear the localStorage value to avoid persisting it across multiple reloads
         localStorage.removeItem('punchValue');
@@ -3124,11 +3374,7 @@ function punchOverwriteCancel() {
     location.reload();  // Refresh the page
 }
 
-
-
-///////////////////////////////////////////
-
-                
+        
         function closeNotification() {
             // Disable the notification container
             document.getElementById('notification-container').style.display = 'none';
@@ -3143,7 +3389,7 @@ function punchOverwriteCancel() {
         var hide = "{{ hide }}"; // Assuming this is how you pass the value from Django template
         console.log("hide:", hide);
          // Initially disable buttons and set box-2 to a stable state
-        var buttons = document.querySelectorAll('#start-btn, #stop-btn, #save-btn, #back-btn');
+        var buttons = document.querySelectorAll('#master-btn, #start-btn, #stop-btn, #save-btn, #back-btn');
         console.log("buttons from the html page",buttons)
     
     
@@ -3159,7 +3405,29 @@ function punchOverwriteCancel() {
         } else {
             document.getElementById('notification-container').style.display = 'none';
             document.getElementById('punch_textarea').style.display = 'none';
+            
         }
+
+
+
+
+
+
+// Function to get CSRF cookie value
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
     
     
  
@@ -3910,6 +4178,11 @@ $(document).ready(function () {
                 $('#rework').val(response.rework_occurrence);
                 $('#total').val(response.total_occurrence);
 
+                if (response.notification) {
+                    showServerNotify(response.notification);
+                }
+
+
                  $.ajax({
                     url: "/send_counts_to_plc/",
                     type: "POST",
@@ -4062,11 +4335,11 @@ $(document).ready(function () {
         mergedChannels[comPort] = matches;
 
         if (card === 'PIEZO_4CH') {
-            setLightColor("com1-light", "green");
+            setLightColor("com1-light", "limegreen");
         } else if (card === 'PIEZO_11CH') {
-            setLightColor("com2-light", "green");
+            setLightColor("com2-light", "limegreen");
         } else if (card === 'LVDT_4CH') {
-            setLightColor("com3-light", "green");
+            setLightColor("com3-light", "limegreen");
         }
 
         // Reset all probes first

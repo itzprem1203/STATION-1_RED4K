@@ -7,6 +7,57 @@
 </head>
 <style>
 
+
+
+@keyframes walkInBox {
+    0% { left: -200px; }
+    100% { left: 20px; }
+}
+@keyframes fadeInBox {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+    50% { box-shadow: 0 0 40px rgba(255,0,0,1); }
+    100% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+}
+
+#plc-notification {
+    position: fixed;
+    width: 95vw;
+    height: 80vh;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: red;
+    color: white;
+    font-size: 5vw; /* reduced font size */
+    font-weight: bold;
+    padding: 30px 50px;
+    border-radius: 15px;
+    z-index: 9999;
+    opacity: 0;
+    overflow: hidden; /* keep human inside box */
+    display: none; /* Hides completely by default */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#human-inside {
+    position: absolute;
+    bottom: 5px;
+    left: -200px; /* start hidden to left */
+    width: 250px; /* increased size */
+}
+
+
+
+
     
 html, body{
     margin: 0;

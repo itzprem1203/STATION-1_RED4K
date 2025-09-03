@@ -459,9 +459,9 @@ function getCookie(name) {
 </div>
 
 
-    <div id="plc-notification">
-    <!-- <img id="human-inside" src="/static/images/air.png" alt="Human Writer"> -->
-    <div id="plc-message"></div>
+    <!-- <div id="plc-notification">
+    <img id="human-inside" src="/static/images/air.png" alt="Human Writer">
+    <div id="plc-message"></div> -->
 </div>
 
 
@@ -477,81 +477,81 @@ function getCookie(name) {
 
 
 
-let isVisible = false;
-let typingTimer = null;
+// let isVisible = false;
+// let typingTimer = null;
 
-function typeMessage(message, element, speed = 100) {
-    element.innerText = "";
-    let index = 0;
-    typingTimer = setInterval(() => {
-        element.innerText += message[index];
-        index++;
-        if (index >= message.length) {
-            clearInterval(typingTimer);
-        }
-    }, speed);
-}
+// function typeMessage(message, element, speed = 100) {
+//     element.innerText = "";
+//     let index = 0;
+//     typingTimer = setInterval(() => {
+//         element.innerText += message[index];
+//         index++;
+//         if (index >= message.length) {
+//             clearInterval(typingTimer);
+//         }
+//     }, speed);
+// }
 
-function showNotificationWithHuman() {
-    if (isVisible) return;
-    isVisible = true;
+// function showNotificationWithHuman() {
+//     if (isVisible) return;
+//     isVisible = true;
 
-    const box = document.getElementById("plc-notification");
-    const human = document.getElementById("human-inside");
-    const msg = document.getElementById("plc-message");
+//     const box = document.getElementById("plc-notification");
+//     const human = document.getElementById("human-inside");
+//     const msg = document.getElementById("plc-message");
 
-    // Make visible
-    box.style.display = "flex";
-    box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
-    box.style.opacity = "1";
+//     // Make visible
+//     box.style.display = "flex";
+//     box.style.animation = "fadeInBox 0.5s forwards, pulse 1s infinite";
+//     box.style.opacity = "1";
 
-    setTimeout(() => {
-        human.style.animation = "walkInBox 2s forwards";
-    }, 300);
+//     setTimeout(() => {
+//         human.style.animation = "walkInBox 2s forwards";
+//     }, 300);
 
-    setTimeout(() => {
-        typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
-    }, 2300);
-}
+//     setTimeout(() => {
+//         typeMessage("⚠ PLEASE CHECK AIR! ⚠", msg, 150);
+//     }, 2300);
+// }
 
-function hideNotificationAndHuman() {
-    clearInterval(typingTimer);
+// function hideNotificationAndHuman() {
+//     clearInterval(typingTimer);
 
-    const box = document.getElementById("plc-notification");
-    const human = document.getElementById("human-inside");
+//     const box = document.getElementById("plc-notification");
+//     const human = document.getElementById("human-inside");
 
-    box.style.display = "none"; // Completely remove from layout
-    box.style.opacity = "0";
-    box.style.animation = "";
+//     box.style.display = "none"; // Completely remove from layout
+//     box.style.opacity = "0";
+//     box.style.animation = "";
 
-    human.style.left = "-200px";
-    human.style.animation = "";
+//     human.style.left = "-200px";
+//     human.style.animation = "";
 
-    isVisible = false;
-}
+//     isVisible = false;
+// }
 
 
-function fetchActiveCoils() {
-    fetch("/get_plc_status/")
-        .then(response => response.json())
-        .then(data => {
-            const activeCoils = data.active_coils || [];
-            console.log("✅ Step 1 coils:", activeCoils);
+// function fetchActiveCoils() {
+//     fetch("/get_plc_status/")
+//         .then(response => response.json())
+//         .then(data => {
+//             const activeCoils = data.active_coils || [];
+//             console.log("✅ Step 1 coils:", activeCoils);
 
-            if (activeCoils.includes(113)) {
-                showNotificationWithHuman();
+//             if (activeCoils.includes(113)) {
+//                 showNotificationWithHuman();
                
-            } else {
-                hideNotificationAndHuman();
-            }
+//             } else {
+//                 hideNotificationAndHuman();
+//             }
 
             
-        })
-        .catch(error => console.error("❌ PLC fetch error", error));
-}
+//         })
+//         .catch(error => console.error("❌ PLC fetch error", error));
+// }
 
-// Start checking every 500 ms
-setInterval(fetchActiveCoils, 500);
+// // Start checking every 500 ms
+// setInterval(fetchActiveCoils, 500);
 
     // Function to handle row selection
     function handleRowSelection(event) {

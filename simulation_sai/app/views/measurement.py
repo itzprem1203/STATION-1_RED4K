@@ -10,7 +10,7 @@ from django.db.models import Q
 import serial.tools.list_ports
 
 from app.models import MasterIntervalSettings, MeasurementData, ParameterFactor, ResetCount, ShiftSettings
-from app.models import TableOneData, Master_settings, comport_settings, measure_data, parameter_settings,InterlinkData
+from app.models import TableOneData, Master_settings, comport_settings, measure_data, parameter_settings,InterlinkData,StationOne
 
 def get_available_com_ports():
     return [port.device for port in serial.tools.list_ports.comports()]
@@ -66,7 +66,7 @@ def process_row(row):
 
         # INSERT or UPDATE InterlinkData based on comp_sr_no
         comp_sr_no = row.get('compSrNo')
-        existing_entry = InterlinkData.objects.filter(comp_sr_no=comp_sr_no).first()
+        existing_entry = StationOne.objects.filter(comp_sr_no=comp_sr_no).first()
 
         if existing_entry:
             # Only update date, part_status, and part_model
@@ -76,7 +76,7 @@ def process_row(row):
             existing_entry.save()
         else:
             # Create a new entry if not exists
-            InterlinkData.objects.create(
+            StationOne.objects.create(
                 status_cell=row.get('statusCell'),
                 date=date_obj_naive,
                 operator=row.get('operator'),

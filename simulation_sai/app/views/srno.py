@@ -222,6 +222,8 @@ def srno(request):
        
 
         if export_type == 'pdf' or export_type == 'send_mail':
+
+            
             template = get_template('app/reports/consolidateSrNo.html')
             context = {
                 'table_html': df.to_html(index=True, escape=False, classes='table table-striped table_data'),
@@ -237,28 +239,15 @@ def srno(request):
             # CSS for scaling down the content to fit a single PDF page
             css = CSS(string='''
                 @page {
-                    size: A4 landscape; /* Landscape mode to fit more content horizontally */
-                    margin: 0.5cm; /* Adjust margin as needed */
+                    size: A4 landscape; /* Landscape for more width */
+                    margin: 1cm;
                 }
+
                 body {
-                    margin: 0; /* Give body some margin to prevent overflow */
-                    transform: scale(0.2); /* Scale down the entire content */
-                    transform-origin: 0 0; /* Ensure the scaling starts from the top-left corner */
+                    margin: 0;
+                    font-size: 20px; /* Big readable font */
                 }
-                .table_data {
-                    width: 5000px; /* Increase the table width */
-                }
-                table {
-                    table-layout: fixed; /* Fix the table layout */
-                    font-size: 20px; /* Increase font size */
-                    border-collapse: collapse; /* Collapse table borders */
-                }
-                table, th, td {
-                    border: 1px solid black; /* Add border to table */
-                }
-                th, td {
-                    word-wrap: break-word; /* Break long words */
-                }
+                
                 .no-pdf {
                     display: none;
                 }
@@ -268,7 +257,7 @@ def srno(request):
 
             # Get the Downloads folder path
             # Get the Downloads folder path
-            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files"
+            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files\WithSrNo"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)
@@ -371,7 +360,7 @@ def srno(request):
                         worksheet.set_column(col_num + 1, col_num + 1, 15, number_format)
 
             # Get the Downloads folder path
-            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files"
+            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files\WithSrNo"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)

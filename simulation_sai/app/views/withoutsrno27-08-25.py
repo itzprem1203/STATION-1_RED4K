@@ -105,7 +105,6 @@ def withoutsrno(request):
             'Shift': []
         }
         hidden_parameters = parameter_settings.objects.filter(hide_checkbox=True, model_id=part_model).values_list('parameter_name', flat=True)
-        print('your DATA IS THIS FOR HIODDEN PARAMETERS:::',hidden_parameters)
 
         # Ensure we include all parameter names that should not be filtered
         parameter_data = parameter_settings.objects.filter(
@@ -141,11 +140,6 @@ def withoutsrno(request):
 
             for record in records:
                 param_name = record.get('parameter_name')
-
-                # Skip hidden parameters
-                if param_name in hidden_parameters:
-                    continue
-
                 try:
                     parameter_setting = parameter_settings.objects.get(parameter_name=param_name, model_id=part_model)
                     utl = parameter_setting.utl
@@ -245,16 +239,29 @@ def withoutsrno(request):
 
             # CSS for scaling down the content to fit a single PDF page
             css = CSS(string='''
-               @page {
-                    size: A4 landscape; /* Landscape for more width */
-                    margin: 1cm;
+                @page {
+                    size: A4 landscape; /* Landscape mode to fit more content horizontally */
+                    margin: 0.5cm; /* Adjust margin as needed */
                 }
-
                 body {
-                    margin: 0;
-                    font-size: 20px; /* Big readable font */
+                    margin: 0; /* Give body some margin to prevent overflow */
+                    transform: scale(0.2); /* Scale down the entire content */
+                    transform-origin: 0 0; /* Ensure the scaling starts from the top-left corner */
                 }
-                
+                .table_data {
+                    width: 5000px; /* Increase the table width */
+                }
+                table {
+                    table-layout: fixed; /* Fix the table layout */
+                    font-size: 20px; /* Increase font size */
+                    border-collapse: collapse; /* Collapse table borders */
+                }
+                table, th, td {
+                    border: 1px solid black; /* Add border to table */
+                }
+                th, td {
+                    word-wrap: break-word; /* Break long words */
+                }
                 .no-pdf {
                     display: none;
                 }
@@ -263,7 +270,7 @@ def withoutsrno(request):
 
             pdf = HTML(string=html_string).write_pdf(stylesheets=[css])
 
-            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files\WithoutSrNo"
+            target_folder = r"C:\Program Files\Gauge_Logic\pdf_files"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)
@@ -367,7 +374,7 @@ def withoutsrno(request):
                     if pd.api.types.is_numeric_dtype(df[col]):
                         worksheet.set_column(col_num + 1, col_num + 1, 15, number_format)    
 
-            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files\WithoutSrNo"
+            target_folder = r"C:\Program Files\Gauge_Logic\xlsx_files"
 
             # Ensure the target folder exists
             os.makedirs(target_folder, exist_ok=True)

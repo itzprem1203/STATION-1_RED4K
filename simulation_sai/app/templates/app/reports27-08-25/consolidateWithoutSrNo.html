@@ -3,9 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
+    
     <link rel="stylesheet" href="{% static 'fontawesome-free-6.7.2-web/css/all.min.css' %}">
     <script src="{% static 'jquery-jquery-f79d5f1/dist/jquery.min.js' %}"></script>
   <!-- Add XLSX library for Excel conversion -->
@@ -16,74 +15,55 @@
    
    <script src="{% static 'parallax-jsPDF-57cbe94/dist/jspdf.umd.min.js' %}"></script>
 
-    <title>Master Report</title>
-
+    <title>Consolidate without Report</title>
     <style>
-               body {
-    border: 2px solid white;
-    font-family: Arial, sans-serif;
-    font-size: 16px; /* big default text */
-}
-
-.data-box {
-
-    padding: 10px;
-    margin-bottom: 20px;
-    overflow-x: auto;
-    overflow-y: auto;
-}
-
-.first-table {
-    background-color: #fff;
-    border: 2px solid #000;
-    text-align: center;
-    margin-bottom: 20px;
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.label {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-}
-
-.value {
-    font-weight: bold;
-    font-size: 12px;
-}
-
-/* ==== Main Table ==== */
-.table_data table {
-    width: 100%;              /* full page width */
-    border-collapse: collapse;
-    table-layout: fixed;      /* keep columns uniform */
-    font-size: 12px;          /* nice and readable */
-}
-
-.table_data th,
-.table_data td {
-    border: 1.5px solid black;
-    text-align: center;
-    font-weight: bold;
-    padding: 1px;
-    height: 45px;             /* ~15 rows per page */
-    word-wrap: break-word;
-    page-break-inside: avoid; /* don’t cut rows between pages */
-}
-
-/* Fix header row */
-.table_data th {
-    background-color: #f2f2f2;
-    font-size: 10px;
-}
-
-/* For first summary table */
-.first-table td {
-    border: 1.5px solid black;
-    width: 20%;               /* each column takes space evenly */
-    padding: 6px;
-    font-size: 14px;
-}
+        .data-box {
+            border: 1px solid white;
+            padding: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+        
+        .first-table {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10px;
+        }
+        .value {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        th, td {
+            border: 1px solid #ccc;
+            text-align: center;
+            font-weight: bold;
+            width: 100px;
+            font-size: 15px;
+            border: 1px solid black; /* Add borders to table cells */
+            padding: 4px; /* Add padding to table cells */
+        }
+        
+        .table_data {
+            width: 5000px;
+        }
+        .table_data th:nth-child(3) {
+            width: 300px; /* Specific width for the 2nd th element */
+        }
+        .table_data th:nth-child(2) {
+            width: 200px; /* Specific width for the 2nd th element */
+        }
+        .table_data th:nth-child(1) {
+            width: 20px; /* Specific width for the 2nd th element */
+        }
+        .first-table td{
+            width: 230px;
+        }
         #h1{
             color: red; 
             text-align: center;
@@ -98,7 +78,7 @@
 .dropdown {
             position: absolute;
             top: 10px;
-            margin-left: 50px;
+            right: 50px;
             display: inline-block;
         }
         .dropdown-content {
@@ -130,6 +110,7 @@
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: #f9f9f9; /* Alternate row background color */
         }
+
         #prevButton{
     width: 80px;
     height: 35px;
@@ -206,7 +187,8 @@
     margin: auto;
     border: 2px solid white;
     margin-top: 0px;
-}
+}     
+
 #loading_spinner {
     position: fixed;
     top: 50%;
@@ -232,41 +214,36 @@
         </div>
     </div>    
     <div class="container">
-        <div class="container-1">
-            <div id="heading"></div>
-            <form id="exportForm" method="post" action="{% url 'masterReport' %}" style="margin-top:-25px ;">
-                {% csrf_token %}
-                <div class="button-container">
-                    <!-- Send Mail Button (Left Side) -->
-                    <button type="submit" class="no-pdf" onclick="hideDropdown()" name="export_type" value="send_mail" id="mail_btn">Send Mail</button>
-                    
-                    <!-- Email Selection Dropdown -->
-                    <label for="email" class="no-pdf"></label>
-                    <select name="recipient_email" class="no-pdf" id="recipientEmail" style="background-color: yellow; height: 35px; ">
-                        <option class="no-pdf" value="{{ email_1 }}">{{ email_1 }}</option>
-                        <option class="no-pdf" value="{{ email_2 }}">{{ email_2 }}</option>
-                    </select>
+    <div class="container-1">
+        <div id="heading"></div>
+        <form id="exportForm" method="post" action="{% url 'withoutsrno' %}" style="margin-top:-25px ;">
+            {% csrf_token %}
+            <div class="button-container">
+                <!-- Send Mail Button (Left Side) -->
+                <button type="submit" class="no-pdf" onclick="hideDropdown()" name="export_type" value="send_mail" id="mail_btn">Send Mail</button>
                 
-                    <!-- PDF Conversion Button (Right Side) -->
-                    <button type="submit" name="export_type" value="pdf" id="pdf_btn" class="no-pdf">PDF CONVERSION</button>
-                    <button type="submit" class="excel no-pdf" name="export_type" id="excel_btn" onclick="exportToExcel(event)" value="excel">Export to Excel</button>
-                </div>
-                
-            </form>
-            <div><button id="prevButton" class="no-pdf" >BACK</button></div>  
-        </div>
-    
-    
-    
-     <!-- Add this in your consolidateSrNo.html -->
-    <div id="popupMessage" class="no-pdf"></div>
+                <!-- Email Selection Dropdown -->
+                <label for="email" class="no-pdf"></label>
+                <select name="recipient_email" class="no-pdf" id="recipientEmail" style="background-color: yellow; height: 35px; ">
+                    <option class="no-pdf" value="{{ email_1 }}">{{ email_1 }}</option>
+                    <option class="no-pdf" value="{{ email_2 }}">{{ email_2 }}</option>
+                </select>
+            
+                <!-- PDF Conversion Button (Right Side) -->
+                <button type="submit" name="export_type" value="pdf" id="pdf_btn" class="no-pdf">PDF CONVERSION</button>
+                <button type="submit" class="excel no-pdf" name="export_type" id="excel_btn" onclick="exportToExcel(event)" value="excel">Export to Excel</button>
+            </div>
+            
+        </form>
+        <div><button id="prevButton" class="no-pdf" >BACK</button></div>  
+    </div>
 
 
-    
-    
-    
-    <script>
 
+ <!-- Add this in your consolidateSrNo.html -->
+<div id="popupMessage" class="no-pdf"></div>
+
+<script>
 
 $(document).ready(function () {
         $("#pdf_btn").click(function () {
@@ -283,31 +260,32 @@ $(document).ready(function () {
     });
 
 
-        function hideDropdown() {
-            document.getElementById("dropdown").style.display = "none";
-        }
+    function hideDropdown() {
+        document.getElementById("dropdown").style.display = "none";
+    }
 
-      // Get the success message from the context if it exists
-    var successMessage = "{{ success_message|escapejs }}";  // Ensure safe rendering of message
+  // Get the success message from the context if it exists
+var successMessage = "{{ success_message|escapejs }}";  // Ensure safe rendering of message
 
 if (successMessage) {
-    // If there is a success message, display the popup
-    var messageDiv = document.getElementById('popupMessage');
-    messageDiv.innerHTML = `<div>${successMessage}</div>`;  // Set the message content
-    messageDiv.style.display = 'block';  // Make the popup visible
-    
-    // Optionally, hide the popup after 5 seconds
-    setTimeout(function() {
-        messageDiv.style.display = 'none';  // Hide the popup after 5 seconds
-    }, 3000);  // Adjust the time duration as needed
+// If there is a success message, display the popup
+var messageDiv = document.getElementById('popupMessage');
+messageDiv.innerHTML = `<div>${successMessage}</div>`;  // Set the message content
+messageDiv.style.display = 'block';  // Make the popup visible
+
+// Optionally, hide the popup after 5 seconds
+setTimeout(function() {
+    messageDiv.style.display = 'none';  // Hide the popup after 5 seconds
+}, 3000);  // Adjust the time duration as needed
 }
-       
-       
-    </script>
+   
+   
+</script>
+   
     
     <table class="first-table">
-        <h1 id="h1">Master Report</h1>
-        {% for data in master_report_values %}
+        <h1 id="h1">Consolidate Without SrNo</h1>
+        {% for data in consolidate_without_values %}
         <tr>
             <td>
                 <span class="label">PARTMODEL:</span>
@@ -339,7 +317,10 @@ if (successMessage) {
                 <span class="label">VENDOR CODE:</span>
                 <span class="value">{{ data.vendor_code }}</span>
             </td>
-           
+            <td>
+                <span class="label">JOB NO:</span>
+                <span class="value">{{ data.job_no }}</span>
+            </td>
             <td>
                 <span class="label">SHIFT:</span>
                 <span class="value">{{ data.shift }}</span>
@@ -349,7 +330,24 @@ if (successMessage) {
                 <span class="value">{{ data.current_date_time }}</span>
             </td>
         </tr>
-    
+        <tr>
+            <td>
+                <span class="label">ACCEPT:</span>
+                <span class="value" id="accept-count">{{ accept_count }}</span>
+            </td>
+            <td>
+                <span class="label">REJECT:</span>
+                <span class="value" id="reject-count">{{ reject_count }}</span>
+            </td>
+            <td>
+                <span class="label">REWORK:</span>
+                <span class="value" id="rework-count">{{ rework_count }}</span>
+            </td>
+            <td colspan="2">
+                <span class="label">TOTAL:</span>
+                <span class="value" id="total-count">{{ total_count }}</span>
+            </td>
+        </tr>
         {% endfor %}
     </table>
     
@@ -364,8 +362,8 @@ if (successMessage) {
         </div>
     </div>
 {% endif %}
-</div>
 
+</div>
 <!-- JavaScript to dynamically update status counts and print to console -->
 <script>
 
@@ -373,8 +371,8 @@ document.getElementById('prevButton').addEventListener('click', function() {
     // Redirect to the report page
     window.location.href = '/report/'; // Replace 'report_page.html' with the actual URL of your report page
 });
-  
- 
+
+
 
 
     function toggleDropdown() {
@@ -382,11 +380,11 @@ document.getElementById('prevButton').addEventListener('click', function() {
     dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
 }
 
-// Function to hide the dropdown
 function hideDropdown() {
     var dropdownContent = document.getElementById("dropdownContent");
     dropdownContent.style.display = "none"; // Hide the dropdown content
 }
+
 
  </script>
 </body>

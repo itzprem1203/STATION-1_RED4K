@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.urls import path
 from django.conf.urls.static import static
-from .views import home,index,comport,probe,trace,parameter,master,measurebox,measurement,get_plc_status,reset_counter,send_counts_to_plc
-from .views import utility,report,spc,srno,withoutsrno,paraReport,jobReport,xBar,xBarRchart,backup,xBarSchart,shift_change_alert,get_time,save_time
-from .views import histogram,pieChart,measure,masterReport,measurement_count,shift_report,get_parameters, get_parameter_value,zzz,post_part_status
+from .views import home,index,comport,probe,trace,parameter,master,measurebox,measurement,get_plc_status,reset_counter,send_counts_to_plc,post_pc_ready,get_active_punch
+from .views import utility,report,spc,srno,withoutsrno,paraReport,jobReport,xBar,xBarRchart,backup,xBarSchart,shift_change_alert,get_time,save_time,deactivate_punch
+from .views import histogram,pieChart,measure,masterReport,measurement_count,shift_report,get_parameters, get_parameter_value,zzz,post_part_status,clearmeasurement
 urlpatterns = [
     path('',home,name="home"),
     path('index/',index,name="index"),
@@ -41,6 +41,10 @@ urlpatterns = [
     path('save_time/', save_time, name='save_time'),
     path('reset_counter/', reset_counter, name='reset_counter'),
     path('send_counts_to_plc/', send_counts_to_plc, name='send_counts_to_plc'),
+    path('post_pc_ready/', post_pc_ready, name='post_pc_ready'),
+    path('get_active_punch/', get_active_punch, name='get_active_punch'),
+    path('deactivate_punch/', deactivate_punch, name='deactivate_punch'),
+    path('clearmeasurement/', clearmeasurement, name='clearmeasurement'),
     ]
 
 if settings.DEBUG:
